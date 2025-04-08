@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ButtonPanel : MonoBehaviour 
+public abstract class ButtonPanel : MonoBehaviour 
 {
     private Button _button;
 

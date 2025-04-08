@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(ButtonMenuView))]
-public class ButtonMenu : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+public abstract class ButtonMenu : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private ButtonMenuView _view;
 

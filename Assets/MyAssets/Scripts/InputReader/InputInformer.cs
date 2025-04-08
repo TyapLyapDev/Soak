@@ -6,6 +6,8 @@ public class InputInformer : MonoBehaviour
     [SerializeField] private MenuShower _menuShower;
     [SerializeField] private KeyBoardInputReader _keyBoardInputReader;
     [SerializeField] private JoystickInputReader _joystickInputReader;
+    [SerializeField] private SliderChangeInformer _sliderMouseSensitivityHorizontal;
+    [SerializeField] private SliderChangeInformer _sliderMouseSensitivityVertical;    
 
     public event Action<Vector2> RotationPressed;
     public event Action JumpPressed;
@@ -31,6 +33,14 @@ public class InputInformer : MonoBehaviour
     {
         _joystickInputReader.Rotated += InformAboutRotationPressed;
         _joystickInputReader.JumpPressed += InformAboutJumpPressed;
+        _joystickInputReader.MenuPressed += InformAboutMenuPressed;
+    }
+
+    private void UnsubscribeMobileInput()
+    {
+        _joystickInputReader.Rotated -= InformAboutRotationPressed;
+        _joystickInputReader.JumpPressed -= InformAboutJumpPressed;
+        _joystickInputReader.MenuPressed -= InformAboutMenuPressed;
     }
 
     private void SubscribePCInput()
@@ -38,13 +48,7 @@ public class InputInformer : MonoBehaviour
         _keyBoardInputReader.RotationPressed += InformAboutRotationPressed;
         _keyBoardInputReader.JumpPressed += InformAboutJumpPressed;
         _keyBoardInputReader.KeyMenuPressed += InformAboutMenuPressed;
-    }
-
-    private void UnsubscribeMobileInput()
-    {
-        _joystickInputReader.Rotated -= InformAboutRotationPressed;
-        _joystickInputReader.JumpPressed -= InformAboutJumpPressed;        
-    }
+    }    
 
     private void UnsubscribePCInput()
     {
@@ -67,7 +71,7 @@ public class InputInformer : MonoBehaviour
     private void InformAboutRotationPressed(Vector2 direction)
     {
         if (_menuShower.IsShowing == false)
-            RotationPressed?.Invoke(direction);
+            RotationPressed?.Invoke(direction * new Vector2(_sliderMouseSensitivityHorizontal.Value, _sliderMouseSensitivityVertical.Value));
     }
 
     private void InformAboutMenuPressed() =>

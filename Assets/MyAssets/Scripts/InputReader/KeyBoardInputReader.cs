@@ -6,6 +6,9 @@ public class KeyBoardInputReader : MonoBehaviour
     private const float SlowStepMultiplier = 0.6f;
     private const float SneakingMultiplier = 0.35f;
     private const float NormalizeMultiplier = 0.5f;
+    private const float MouseSensitivity = 0.2f;
+
+    [SerializeField] private float _rotationSensitivity;
 
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
@@ -51,9 +54,10 @@ public class KeyBoardInputReader : MonoBehaviour
     private void ReadKeyRotation()
     {
         Vector2 mouseDelta = new(Input.GetAxis(MouseX), Input.GetAxis(MouseY));
+        mouseDelta *= _rotationSensitivity;
 
         if (mouseDelta != Vector2.zero)
-            RotationPressed?.Invoke(mouseDelta);
+            RotationPressed?.Invoke(mouseDelta * MouseSensitivity);
     }
 
     private void ReadKeyJump()

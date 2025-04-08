@@ -4,6 +4,16 @@ public class Player : Character
 {
     [SerializeField] private InputInformer _inputInformer;
 
+    private VerticalRotator _verticalRotator;
+    private HorizontalRotator _horizontalRotator;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _horizontalRotator = new(transform);
+        _verticalRotator = new(Camera.main.transform);
+    }
+
     private void Update() =>
         OnMove();
 
@@ -24,8 +34,8 @@ public class Player : Character
 
     private void OnRotate(Vector2 direction)
     {
-        RotateHorizontal(direction.x);
-        RotateVertical(direction.y);
+        _horizontalRotator.Rotate(direction.x);
+        _verticalRotator.Rotate(direction.y);
     }
 
     private void OnJump() =>

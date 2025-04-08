@@ -1,4 +1,3 @@
-using GC;
 using System;
 using UnityEngine;
 
@@ -7,20 +6,24 @@ public class JoystickInputReader : MonoBehaviour
     [SerializeField] private UI.Joystick.Joystick _joystickMovement;
     [SerializeField] private TouchPanelInformer _touchPanel;
     [SerializeField] private ButtonChangeInformer _jumpButton;
+    [SerializeField] private ButtonClickInformer _menuButton;
     [SerializeField] private float _rotationSensitivity;
 
     public event Action<Vector2> Rotated;
     public event Action JumpPressed;
+    public event Action MenuPressed;
 
     private void OnEnable()
     {
         _jumpButton.DownPressed += InformAboutJumpPressed;
+        _menuButton.Clicked += InformAboutMenuPressed;
         _touchPanel.Rotated += OnRotation;
     }
 
     private void OnDisable()
     {
         _jumpButton.DownPressed -= InformAboutJumpPressed;
+        _menuButton.Clicked -= InformAboutMenuPressed;
         _touchPanel.Rotated -= OnRotation;
     }
 
@@ -32,4 +35,7 @@ public class JoystickInputReader : MonoBehaviour
 
     private void InformAboutJumpPressed(ButtonChangeInformer _) =>
         JumpPressed?.Invoke();
+
+    private void InformAboutMenuPressed() =>
+        MenuPressed?.Invoke();
 }
