@@ -1,15 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class KeyBoardInputReader : MonoBehaviour
-{
-    private const float SlowStepMultiplier = 0.6f;
-    private const float SneakingMultiplier = 0.35f;
-    private const float NormalizeMultiplier = 0.5f;
-    private const float MouseSensitivity = 0.2f;
-
-    [SerializeField] private float _rotationSensitivity;
-
+public class KeyboardInputReader : MonoBehaviour
+{    
+    private const float DiagonalStepNormalizationMultiplier = 0.5f;
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
     private const string MouseX = "Mouse X";
@@ -41,12 +35,12 @@ public class KeyBoardInputReader : MonoBehaviour
         Vector2 direction = new(Input.GetAxisRaw(Horizontal), Input.GetAxisRaw(Vertical));
 
         if (direction.x != 0 && direction.y != 0)
-            direction *= NormalizeMultiplier;
+            direction *= DiagonalStepNormalizationMultiplier;
 
         if (IsSneaking())
-            direction *= SneakingMultiplier;
+            direction *= DataParams.Character.SneakingStepMultiplierSpeed;
         else if (IsSlowStep())
-            direction *= SlowStepMultiplier;
+            direction *= DataParams.Character.SlowingStepMultiplierSpeed;
 
         return direction;
     }
@@ -54,10 +48,9 @@ public class KeyBoardInputReader : MonoBehaviour
     private void ReadKeyRotation()
     {
         Vector2 mouseDelta = new(Input.GetAxis(MouseX), Input.GetAxis(MouseY));
-        mouseDelta *= _rotationSensitivity;
 
         if (mouseDelta != Vector2.zero)
-            RotationPressed?.Invoke(mouseDelta * MouseSensitivity);
+            RotationPressed?.Invoke(mouseDelta * DataParams.Inputs.MouseDragSensitivity);
     }
 
     private void ReadKeyJump()

@@ -6,10 +6,10 @@ public class Mover
     private readonly Gravity _gravity;
     private readonly float _speed;
 
-    public Mover(CharacterController characterController, float baseGravity, float speed)
+    public Mover(CharacterController characterController, float speed)
     {
         _characterController = characterController;
-        _gravity = new(characterController, baseGravity);
+        _gravity = new(characterController);
         _speed = speed;
     }
 

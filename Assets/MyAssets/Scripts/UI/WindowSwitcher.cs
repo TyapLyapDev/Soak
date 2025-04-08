@@ -66,11 +66,11 @@ public class WindowSwitcher : MonoBehaviour
                 break;
 
             case ButtonDisconnect:
-                SceneManager.LoadScene(NameData.Scenes.Menu);
+                SceneManager.LoadScene(DataParams.SceneNames.Menu);
                 break;
 
             case ButtonNewGame:
-                SceneManager.LoadScene(NameData.Scenes.Game);
+                SceneManager.LoadScene(DataParams.SceneNames.Game);
                 break;
 
             case ButtonSettings:

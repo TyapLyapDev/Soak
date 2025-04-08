@@ -12,20 +12,18 @@ public class DeltaMovementCalculator
         _previousPosition = _transform.position;
     }
 
-    private Vector3 UpdateDelta()
+    public Vector2 GetNormalizedDelta(float movementSpeed)
+    {
+        UpdateDelta();
+        float distancePerFrame = movementSpeed * Time.deltaTime;
+
+        return distancePerFrame == 0 ? Vector2.zero : _lastDelta /distancePerFrame;
+    }
+
+    private void UpdateDelta()
     {
         Vector3 worldDelta = _transform.position - _previousPosition;
         _lastDelta = _transform.InverseTransformDirection(worldDelta);
         _previousPosition = _transform.position;
-
-        return _lastDelta;
-    }
-
-    public Vector2 GetNormalizedDelta(float movementSpeed)
-    {
-        UpdateDelta();
-        Vector3 delta = _lastDelta / (movementSpeed * Time.deltaTime + Mathf.Epsilon);
-
-        return new(delta.x, delta.z);
-    }
+    }    
 }

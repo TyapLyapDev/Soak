@@ -3,17 +3,17 @@ using UnityEngine.Audio;
 
 public class VolumeAccepter : MonoBehaviour
 {
-    private const string Game = nameof(Game);
     private const string Music = nameof(Music);
+    private const string Game = nameof(Game);
 
     [SerializeField] private AudioMixer _mixer;
     [SerializeField] private SliderChangeInformer _music;
     [SerializeField] private SliderChangeInformer _game;
 
-    private ModifierVolume _modifier;
+    private VolumeModifier _modifier;
 
     private void Awake() =>
-        _modifier = new ModifierVolume(_mixer);
+        _modifier = new(_mixer);
 
     private void Start()
     {

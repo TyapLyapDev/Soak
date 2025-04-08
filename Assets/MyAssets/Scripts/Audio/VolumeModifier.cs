@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class ModifierVolume
+public class VolumeModifier
 {
     private const float MinLevel = -80;
     private const float MaxLevel = 20;
@@ -11,7 +11,7 @@ public class ModifierVolume
 
     private readonly AudioMixer _audioMixer;
 
-    public ModifierVolume(AudioMixer audioMixer)
+    public VolumeModifier(AudioMixer audioMixer)
     {
         _audioMixer = audioMixer;
     }
@@ -24,15 +24,9 @@ public class ModifierVolume
 
     private float ConvertVolumeToLevel(float value)
     {
-        float level;
-
         if (value < MinValue || value > MaxValue)
             throw new ArgumentException("«начение за пределами допустимого диапазона");
-        if (value == 0)
-            level = MinLevel;
-        else
-            level = Mathf.Log10(value) * MaxLevel;
 
-        return level;
+        return value == 0 ? MinLevel : Mathf.Log10(value) * MaxLevel;
     }
 }

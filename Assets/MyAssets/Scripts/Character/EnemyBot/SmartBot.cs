@@ -81,7 +81,7 @@ public class SmartBot : Character
         Vector2 input = _directionNormalizer.NormalizeToMoveOnPlane(targetPosition);
 
         _forwardRotator.UpdateLastMovementDirection(new(input.x, 0, input.y));
-        Move(input * multiplierSpeed);
+        OnMove(input * multiplierSpeed);
     }
 
     private void UpdateRotation()

@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace UI.Joystick
 {
-    public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+    public class CustomJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
     {
         [SerializeField] private Background _background;
         [SerializeField] private Handle _handle;

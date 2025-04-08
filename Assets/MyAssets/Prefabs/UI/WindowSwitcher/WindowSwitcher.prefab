@@ -1141,7 +1141,7 @@ GameObject:
   - component: {fileID: 7217992936282903352}
   - component: {fileID: 2740844560315925171}
   m_Layer: 5
-  m_Name: SliderVertical
+  m_Name: MouseSensitivityVerticalSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4514,7 +4514,7 @@ GameObject:
   - component: {fileID: 6428905741698414847}
   - component: {fileID: 6198736667467874437}
   m_Layer: 5
-  m_Name: SliderHorizontal
+  m_Name: MouseSensitivityHorizontalSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

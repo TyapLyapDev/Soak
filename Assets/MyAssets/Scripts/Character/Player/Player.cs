@@ -19,25 +19,22 @@ public class Player : Character
 
     private void OnEnable()
     {
-        _inputInformer.JumpPressed += OnJump;
         _inputInformer.RotationPressed += OnRotate;
+        _inputInformer.JumpPressed += OnJump;
     }
 
     private void OnDisable()
     {
-        _inputInformer.JumpPressed -= OnJump;
         _inputInformer.RotationPressed -= OnRotate;
+        _inputInformer.JumpPressed -= OnJump;
     }
 
     private void OnMove() =>
-        Move(_inputInformer.GetMovement());
+        OnMove(_inputInformer.GetMovement());
 
     private void OnRotate(Vector2 direction)
     {
         _horizontalRotator.Rotate(direction.x);
         _verticalRotator.Rotate(direction.y);
     }
-
-    private void OnJump() =>
-        Jump();
 }

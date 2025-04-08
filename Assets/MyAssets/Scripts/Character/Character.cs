@@ -4,12 +4,9 @@ using UnityEngine;
 public abstract class Character : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
-    [SerializeField] private float _movementSpeed;
-    [SerializeField] private float _gravityForce;
-    [SerializeField] private float _jumpForce;
 
-    private CharacterAnimatorWrapper _characterAnimatorWrapper;
     private CharacterController _characterController;
+    private CharacterAnimatorWrapper _characterAnimatorWrapper;
     private DeltaMovementCalculator _deltaCalculator;
     private Mover _mover;
     private Jumper _jumper;
@@ -17,22 +14,22 @@ public abstract class Character : MonoBehaviour
     protected virtual void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _deltaCalculator = new(transform);
-        _mover = new(_characterController, _gravityForce, _movementSpeed);
-        _jumper = new(_mover, _jumpForce);
         _characterAnimatorWrapper = new(_animator);
+        _deltaCalculator = new(transform);
+        _mover = new(_characterController, DataParams.Character.MovementSpeed);
+        _jumper = new(_mover, DataParams.Character.JumpingForce);
     }
 
     protected void SwitchSneacking(bool isOn) =>
         _characterAnimatorWrapper.SwitchSneacking(isOn);
 
-    protected void Move(Vector2 direction)
+    protected void OnMove(Vector2 direction)
     {
         _mover.Move(direction);
-        _characterAnimatorWrapper.UpdateMovement(_deltaCalculator.GetNormalizedDelta(_movementSpeed));
+        _characterAnimatorWrapper.UpdateMovement(_deltaCalculator.GetNormalizedDelta(DataParams.Character.MovementSpeed));
     }
 
-    protected void Jump()
+    protected void OnJump()
     {
         if (_characterController.isGrounded)
             _jumper.Jump();
