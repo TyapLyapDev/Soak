@@ -7,12 +7,14 @@ public class MenuShower : MonoBehaviour
     [SerializeField] private InputInformer _inputInformer;
     [SerializeField] private GameObject _canvasMobile;
 
-    public bool IsShowing { get; private set; }
+    private bool _isShowing;
+
+    public bool IsShowing => _isShowing;
 
     public event Action<bool> ShowingStateChanged;
 
     private void Start() =>
-        OnShowingChanged(IsShowing);
+        OnShowingChanged(_isShowing);
 
     private void OnEnable()
     {
@@ -28,13 +30,13 @@ public class MenuShower : MonoBehaviour
 
     private void OnMenuPressed()
     {
-        IsShowing = !IsShowing;
-        OnShowingChanged(IsShowing);
+        _isShowing = !_isShowing;
+        OnShowingChanged(_isShowing);
 
-        if (IsShowing == false && Application.isMobilePlatform)
+        if (_isShowing == false && Application.isMobilePlatform)
             _canvasMobile.SetActive(true);
 
-        if (IsShowing && Application.isMobilePlatform)
+        if (_isShowing && Application.isMobilePlatform)
             _canvasMobile.SetActive(false);
     }
 

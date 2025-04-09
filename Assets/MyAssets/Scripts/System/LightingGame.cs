@@ -11,16 +11,15 @@ public class LightingGame : MonoBehaviour
     private float _minimumValueSlider;
     private float _maximumValueSlider;
 
-    private void Awake() =>
-        _directionalLight = GetComponent<Light>();
-
-    private void Start()
+    private void Awake()
     {
+        _directionalLight = GetComponent<Light>();
         _minimumValueSlider = _lightSlider.MinimumValue;
         _maximumValueSlider = _lightSlider.MaximumValue;
-
-        OnChanged(_lightSlider.Value);
     }
+
+    private void Start() =>
+        OnChanged(_lightSlider.Value);
 
     private void OnEnable() =>
         _lightSlider.ValueChanged += OnChanged;

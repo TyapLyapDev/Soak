@@ -1,14 +1,16 @@
 using TMPro;
 using UnityEngine;
 
-public class ButtonMenuView : MonoBehaviour
+public class ButtonMenuView
 {
-    [SerializeField] private TextMeshProUGUI _text;
-
+    private TextMeshProUGUI _text;
     private Color _initialColor;
 
-    private void Start() => 
+    public ButtonMenuView(TextMeshProUGUI text)
+    {
+        _text = text;
         _initialColor = _text.color;
+    }
 
     public void SetInitialColor() =>
         _text.color = _initialColor;

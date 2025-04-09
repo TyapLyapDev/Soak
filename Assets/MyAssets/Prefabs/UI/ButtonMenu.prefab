@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5399106821047036792}
   - component: {fileID: 7908686000451098985}
   - component: {fileID: 5902575761167345231}
-  - component: {fileID: 1873270611006651607}
   m_Layer: 5
   m_Name: ButtonMenu
   m_TagString: Untagged
@@ -77,19 +76,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1873270611006651607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5574764797417994792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e3f682d9f068a443975de8a7a9a1b72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _text: {fileID: 7302267715030137119}
 --- !u!1 &6334279204577702477
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,8 +8,9 @@ public class KeyboardInputReader : MonoBehaviour
     private const string Vertical = "Vertical";
     private const string MouseX = "Mouse X";
     private const string MouseY = "Mouse Y";
+
     private const KeyCode Jumping = KeyCode.Space;
-    private const KeyCode SLowStep = KeyCode.LeftShift;
+    private const KeyCode SLowingStep = KeyCode.LeftShift;
     private const KeyCode Sneaking = KeyCode.LeftControl;
     private const KeyCode Escape = KeyCode.Escape;
 
@@ -24,8 +25,8 @@ public class KeyboardInputReader : MonoBehaviour
         ReadKeyMenu();
     }
 
-    public bool IsSlowStep() =>
-        Input.GetKey(SLowStep);
+    public bool IsSlowingStep() =>
+        Input.GetKey(SLowingStep);
 
     public bool IsSneaking() =>
         Input.GetKey(Sneaking);
@@ -39,7 +40,7 @@ public class KeyboardInputReader : MonoBehaviour
 
         if (IsSneaking())
             direction *= DataParams.Character.SneakingStepMultiplierSpeed;
-        else if (IsSlowStep())
+        else if (IsSlowingStep())
             direction *= DataParams.Character.SlowingStepMultiplierSpeed;
 
         return direction;

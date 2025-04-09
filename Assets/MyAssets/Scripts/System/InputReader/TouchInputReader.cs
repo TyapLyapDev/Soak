@@ -7,7 +7,7 @@ public class TouchInputReader : MonoBehaviour
     [SerializeField] private CustomJoystick _joystickMovement;
     [SerializeField] private TouchPanelInformer _touchPanel;
     [SerializeField] private ButtonChangeInformer _jumpButton;
-    [SerializeField] private ButtonClickInformer _menuButton;
+    [SerializeField] private MobileButtonShowMenu _menuButton;
 
     public event Action<Vector2> RotationPressed;
     public event Action JumpPressed;

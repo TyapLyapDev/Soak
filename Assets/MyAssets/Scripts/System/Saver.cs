@@ -2,27 +2,6 @@ using UnityEngine;
 
 public class Saver : MonoBehaviour
 {
-    private const string HorizontalRotation = nameof(HorizontalRotation);
-    private const string VerticalRotation = nameof(VerticalRotation);
-    private const string VolumeGame = nameof(VolumeGame);
-    private const string VolumeMusic = nameof(VolumeMusic);
-    private const string Lighting = nameof(Lighting);
-    private const string AimColorR = nameof(AimColorR);
-    private const string AimColorG = nameof(AimColorG);
-    private const string AimColorB = nameof(AimColorB);
-    private const string AimScale = nameof(AimScale);
-
-    private const float ValueHorizontalRotation = 5f;
-    private const float ValueVerticalRotation = 5f;
-    private const float ValueVolumeGame = 0.9f;
-    private const float ValueVolumeMusic = 0.8f;
-    private const float ValueLighting = 40f;
-    private const float ValueAimColorR = 0f;
-    private const float ValueAimColorG = 1f;
-    private const float ValueAimColorB = 0f;
-    private const float ValueAimScale = 1f;
-
-    [SerializeField] private WindowSwitcher _windowSwitcher;
     [SerializeField] private SliderChangeInformer _sliderHorizontalRotation;
     [SerializeField] private SliderChangeInformer _sliderVerticalRotation;
     [SerializeField] private SliderChangeInformer _sliderVolumeGame;
@@ -33,49 +12,36 @@ public class Saver : MonoBehaviour
     private void Start() =>
         Load();
 
-    private void OnEnable()
+    public void Save()
     {
-        _windowSwitcher.ChangesApplied += Save;
-        _windowSwitcher.ChangesCanceled += Load;
-    }
-
-    private void OnDisable()
-    {
-        _windowSwitcher.ChangesApplied -= Save;
-        _windowSwitcher.ChangesApplied -= Load;
-    }
-
-    private void Save()
-    {
-        PlayerPrefs.SetFloat(HorizontalRotation, _sliderHorizontalRotation.Value);
-        PlayerPrefs.SetFloat(VerticalRotation, _sliderVerticalRotation.Value);
-        PlayerPrefs.SetFloat(VolumeGame, _sliderVolumeGame.Value);
-        PlayerPrefs.SetFloat(VolumeMusic, _sliderVolumeMusic.Value);
-        PlayerPrefs.SetFloat(Lighting, _sliderLighting.Value);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.HorizontalRotation, _sliderHorizontalRotation.Value);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.VerticalRotation, _sliderVerticalRotation.Value);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.VolumeGame, _sliderVolumeGame.Value);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.VolumeMusic, _sliderVolumeMusic.Value);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.Lighting, _sliderLighting.Value);
 
         Color color = _aimColorPicker.Color;
-        PlayerPrefs.SetFloat(AimColorR, color.r);
-        PlayerPrefs.SetFloat(AimColorG, color.g);
-        PlayerPrefs.SetFloat(AimColorB, color.b);
-
-        PlayerPrefs.SetFloat(AimScale, _aimColorPicker.Scale);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.AimColorR, color.r);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.AimColorG, color.g);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.AimColorB, color.b);
+        PlayerPrefs.SetFloat(DataParams.SaveOptions.AimScale, _aimColorPicker.Scale);
 
         PlayerPrefs.Save();
     }
 
-    private void Load()
+    public void Load()
     {
-        _sliderHorizontalRotation.SetValue(PlayerPrefs.GetFloat(HorizontalRotation, ValueHorizontalRotation));
-        _sliderVerticalRotation.SetValue(PlayerPrefs.GetFloat(VerticalRotation, ValueVerticalRotation));
-        _sliderVolumeGame.SetValue(PlayerPrefs.GetFloat(VolumeGame, ValueVolumeGame));
-        _sliderVolumeMusic.SetValue(PlayerPrefs.GetFloat(VolumeMusic, ValueVolumeMusic));
-        _sliderLighting.SetValue(PlayerPrefs.GetFloat(Lighting, ValueLighting));
+        _sliderHorizontalRotation.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.HorizontalRotation, DataParams.SaveOptions.ValueHorizontalRotation));
+        _sliderVerticalRotation.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.VerticalRotation, DataParams.SaveOptions.ValueVerticalRotation));
+        _sliderVolumeGame.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.VolumeGame, DataParams.SaveOptions.ValueVolumeGame));
+        _sliderVolumeMusic.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.VolumeMusic, DataParams.SaveOptions.ValueVolumeMusic));
+        _sliderLighting.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.Lighting, DataParams.SaveOptions.ValueLighting));
 
-        float r = PlayerPrefs.GetFloat(AimColorR, ValueAimColorR);
-        float g = PlayerPrefs.GetFloat(AimColorG, ValueAimColorG);
-        float b = PlayerPrefs.GetFloat(AimColorB, ValueAimColorB);
+        float r = PlayerPrefs.GetFloat(DataParams.SaveOptions.AimColorR, DataParams.SaveOptions.ValueAimColorR);
+        float g = PlayerPrefs.GetFloat(DataParams.SaveOptions.AimColorG, DataParams.SaveOptions.ValueAimColorG);
+        float b = PlayerPrefs.GetFloat(DataParams.SaveOptions.AimColorB, DataParams.SaveOptions.ValueAimColorB);
 
         _aimColorPicker.SetColor(new(r, g, b));
-        _aimColorPicker.SetScale(PlayerPrefs.GetFloat(AimScale, ValueAimScale));
+        _aimColorPicker.SetScale(PlayerPrefs.GetFloat(DataParams.SaveOptions.AimScale, DataParams.SaveOptions.ValueAimScale));
     }
 }
