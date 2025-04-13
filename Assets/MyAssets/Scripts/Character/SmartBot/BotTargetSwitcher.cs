@@ -23,7 +23,7 @@ public class BotTargetSwitcher
         _rutine.Start();
     }
 
-    public Vector3 TargetPosition => _currentTarget.position;
+    public Transform Target => _currentTarget;
 
     public Vector2 GetDirectionToTarget()
     {

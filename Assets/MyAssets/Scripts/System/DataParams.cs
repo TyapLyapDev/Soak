@@ -45,8 +45,8 @@ public static class DataParams
 
         public const float ValueHorizontalRotation = 1.4f;
         public const float ValueVerticalRotation = 1.4f;
-        public const float ValueVolumeGame = 90f;
-        public const float ValueVolumeMusic = 70f;
+        public const float ValueVolumeGame = 45f;
+        public const float ValueVolumeMusic = 30f;
         public const float ValueLighting = 40f;
         public const float ValueAimColorR = 0f;
         public const float ValueAimColorG = 1f;

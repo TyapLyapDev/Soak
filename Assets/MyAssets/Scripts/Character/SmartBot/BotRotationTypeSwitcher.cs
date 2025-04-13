@@ -38,9 +38,6 @@ public class BotRotationTypeSwitcher
         }
     }
 
-    public void SetNewRandomType()
-    {
+    public void SetNewRandomType() =>
         _currentType = (LookingType)Random.Range(0, System.Enum.GetValues(typeof(LookingType)).Length);
-        Debug.Log($"Typ Rotation = {_currentType}");
-    }
 }

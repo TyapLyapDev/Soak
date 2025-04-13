@@ -42,8 +42,6 @@ public class SmartBot : Character
     private void OnMove()
     {
         Vector2 input = _targetSwitcher.GetDirectionToTarget();
-        _botRotator.UpdateLastMovementDirection(new(input.x, 0, input.y));
-        _botRotator.UpdateTargetPosition(_targetSwitcher.TargetPosition);
 
         if (_botMover.IsMoving == false)
             input = Vector2.zero;
@@ -69,5 +67,6 @@ public class SmartBot : Character
         SetSlowingStep();
     }
 
-    private void OnTargetSwitched() { }
+    private void OnTargetSwitched() =>
+        _botRotator.UpdateTarget(_targetSwitcher.Target);
 }

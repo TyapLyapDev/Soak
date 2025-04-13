@@ -24,31 +24,27 @@ public class SmartBotRotator
 
         InitStates();
         _rutine.Start();
-        _rotatorToTarget.NoTarget += OnLossTarget;
+    }
+
+    public void UpdateTarget(Transform target)
+    {
+        _forwardRotator.UpdateTarget(target);
+        _rotatorToTarget.UpdateTarget(target);
     }
 
     private void InitStates()
     {
         _states = new Dictionary<LookingType, Action>
-        { 
+        {
             { LookingType.Target, _rotatorToTarget.UpdateRotation },
             { LookingType.Around, _lookingAroundRotator.UpdateRotation },
             { LookingType.Forward, _forwardRotator.UpdateRotation },
         };
     }
 
-    private void OnLossTarget() =>
-        _rotationTypeSwitcher.SetNewRandomType();
-
     private void UpdateRotation()
     {
-        if(_states.TryGetValue(_rotationTypeSwitcher.GetCurrentType, out Action action))
+        if (_states.TryGetValue(_rotationTypeSwitcher.GetCurrentType, out Action action))
             action?.Invoke();
     }
-
-    public void UpdateLastMovementDirection(Vector3 direction) =>
-        _forwardRotator.UpdateLastMovementDirection(direction);
-
-    public void UpdateTargetPosition(Vector3 targetPosition) =>
-        _rotatorToTarget.UpdateTargetPosition(targetPosition);
 }

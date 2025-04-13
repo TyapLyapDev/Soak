@@ -2,12 +2,12 @@
 
 public class BotLookingAroundRotator
 {
-    private const float Deviation = 0.1f;
+    private const float Deviation = 0.5f;
 
     private readonly Transform _horizontal;
     private readonly Transform _vertical;
     private readonly Vector2 _speedLimits = new(2f, 8f);
-    private readonly Vector2 _horizontalAngleLimits = new(0, 180f);
+    private readonly Vector2 _horizontalAngleLimits = new(0, 360f);
     private readonly Vector2 _durationLimits = new(2f, 4f);
 
     private Quaternion _targetHorizontalRotation;
@@ -23,7 +23,24 @@ public class BotLookingAroundRotator
         _vertical = vertical;
     }
 
-    public void StartRotation()
+    public void UpdateRotation()
+    {
+        bool isRotateHorizontal = IsRotateHorizontal();
+        bool isRotateVertical = IsRotateVertical();
+
+        if (isRotateHorizontal == false && isRotateVertical == false)
+        {
+            SetNewParams();
+            return;
+        }
+
+        _lookTimer += Time.deltaTime;
+
+        if (_lookTimer >= _duration)
+            SetNewParams();
+    }
+
+    private void SetNewParams()
     {
         _lookTimer = 0f;
         _currentSpeed = Random.Range(_speedLimits.x, _speedLimits.y);
@@ -35,23 +52,6 @@ public class BotLookingAroundRotator
         _targetHorizontalRotation = Quaternion.Euler(0, horizontalAngle, 0);
         _targetVerticalRotation = Quaternion.Euler(verticalAngle, 0, 0);
     }
-
-    public void UpdateRotation()
-    {
-        bool isRotateHorizontal = IsRotateHorizontal();
-        bool isRotateVertical = IsRotateVertical();
-
-        if (isRotateHorizontal == false && isRotateVertical == false)
-        {
-            StartRotation();
-            return;
-        }
-
-        _lookTimer += Time.deltaTime;
-
-        if (_lookTimer >= _duration)
-            StartRotation();
-    }        
 
     private bool IsRotateHorizontal()
     {
