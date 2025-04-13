@@ -2,14 +2,14 @@
 
 public class Gravity
 {
-    private readonly CharacterController _characterController;
+    private readonly CharacterController _controller;
 
     private float _maximumVerticalVelocity;
     private float _currentVerticalVelocity;
 
     public Gravity(CharacterController characterController)
     {
-        _characterController = characterController;
+        _controller = characterController;
     }
 
     public float GetUpdateVelocity()
@@ -21,7 +21,7 @@ public class Gravity
 
     private void UpdateVelosity()
     {
-        bool isGrounded = _characterController.isGrounded && _currentVerticalVelocity != _maximumVerticalVelocity;
+        bool isGrounded = _controller.isGrounded && _currentVerticalVelocity != _maximumVerticalVelocity;
         _currentVerticalVelocity -= isGrounded ? Mathf.Epsilon : DataParams.Character.Gravity * Time.deltaTime;
     }
 

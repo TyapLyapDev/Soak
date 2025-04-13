@@ -10,12 +10,23 @@ public enum LookingType
 
 public class BotRotationTypeSwitcher
 {
+    private readonly Rutine _rutine;
     private readonly Vector2 _durationLimits = new(2f, 5f);
-    private LookingType _currentType = LookingType.Target;
+    private LookingType _currentType;
     private float _timer;
     private float _duration;
 
-    public LookingType GetCurrentType()
+    public BotRotationTypeSwitcher(MonoBehaviour mono)
+    {
+        _rutine = new(mono, UpdateInfo);
+
+        SetNewRandomType();
+        _rutine.Start();
+    }
+
+    public LookingType GetCurrentType => _currentType;
+
+    private void UpdateInfo()
     {
         _timer += Time.deltaTime;
 
@@ -25,13 +36,11 @@ public class BotRotationTypeSwitcher
             _duration = Random.Range(_durationLimits.x, _durationLimits.y);
             SetNewRandomType();
         }
-
-        return _currentType;
     }
 
     public void SetNewRandomType()
     {
         _currentType = (LookingType)Random.Range(0, System.Enum.GetValues(typeof(LookingType)).Length);
-        Debug.Log($"LookingType = {_currentType}");
+        Debug.Log($"Typ Rotation = {_currentType}");
     }
 }

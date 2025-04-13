@@ -22,7 +22,7 @@ public class WindowSwitcher : MonoBehaviour
         _panelManager = new(transform);
         _buttonPanelManager = new(transform);
         _buttonMenuManager = new(transform, _buttonSelectColor, _sfxPlayer);
-        _tabManager = new(transform, _buttonTabSelectSprite);
+        _tabManager = new(transform, _sfxPlayer, _buttonTabSelectSprite);
         _subscriber = new(_buttonMenuManager, _buttonPanelManager, _tabManager);
     }
 
@@ -45,7 +45,7 @@ public class WindowSwitcher : MonoBehaviour
         _saver.Save();
 
     public void LoadPreferences() =>
-        _saver.Save();
+        _saver.Load();
 
     public void ShowPanel<T>() where T : StateElement
     {

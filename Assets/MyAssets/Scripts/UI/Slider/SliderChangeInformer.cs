@@ -1,21 +1,30 @@
 using System;
-using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Slider))]
-public class SliderChangeInformer : MonoBehaviour
+public abstract class SliderChangeInformer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [SerializeField] private Slider _slider;
-    [SerializeField] private TextMeshProUGUI _text;
+    private Slider _slider;
+    private SliderTextValue _textValue;
 
     public event Action<float> ValueChanged;
+    public event Action<Type> DownPressed;
+    public event Action<Type> UpPressed;
 
     public float Value => _slider.value;
 
     public float MinimumValue => _slider.minValue;
 
     public float MaximumValue => _slider.maxValue;
+
+    public void Init()
+    {
+        _slider = GetComponent<Slider>();
+        _textValue = GetComponentInChildren<SliderTextValue>(true);
+        _textValue.Init(MaximumValue);
+    }
 
     private void Start() =>
         SetText(Value);
@@ -39,5 +48,11 @@ public class SliderChangeInformer : MonoBehaviour
     }
 
     private void SetText(float value) =>
-        _text.text = Value.ToString("F1");
+        _textValue.SetValue(value);
+
+    public void OnPointerDown(PointerEventData eventData) =>
+        DownPressed?.Invoke(GetType());
+
+    public void OnPointerUp(PointerEventData eventData) =>
+        UpPressed?.Invoke(GetType());
 }

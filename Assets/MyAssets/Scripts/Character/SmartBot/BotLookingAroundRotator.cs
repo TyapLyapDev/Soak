@@ -7,7 +7,6 @@ public class BotLookingAroundRotator
     private readonly Transform _horizontal;
     private readonly Transform _vertical;
     private readonly Vector2 _speedLimits = new(2f, 8f);
-    private readonly Vector2 _verticalAngleLimits = new(-90f, 90f);
     private readonly Vector2 _horizontalAngleLimits = new(0, 180f);
     private readonly Vector2 _durationLimits = new(2f, 4f);
 
@@ -31,7 +30,7 @@ public class BotLookingAroundRotator
         _duration = Random.Range(_durationLimits.x, _durationLimits.y);
 
         float horizontalAngle = Random.Range(_horizontalAngleLimits.x, _horizontalAngleLimits.y);
-        float verticalAngle = Random.Range(_verticalAngleLimits.x, _verticalAngleLimits.y);
+        float verticalAngle = Random.Range(DataParams.Character.MinimumVerticalRotationAngle, DataParams.Character.MaximumVerticalRotationAngle);
 
         _targetHorizontalRotation = Quaternion.Euler(0, horizontalAngle, 0);
         _targetVerticalRotation = Quaternion.Euler(verticalAngle, 0, 0);

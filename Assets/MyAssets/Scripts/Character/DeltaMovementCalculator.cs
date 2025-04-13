@@ -4,7 +4,6 @@ public class DeltaMovementCalculator
 {
     private readonly Transform _transform;
     private Vector3 _previousPosition;
-    private Vector3 _lastDelta;
 
     public DeltaMovementCalculator(Transform transform)
     {
@@ -12,18 +11,15 @@ public class DeltaMovementCalculator
         _previousPosition = _transform.position;
     }
 
-    public Vector2 GetNormalizedDelta(float movementSpeed)
-    {
-        UpdateDelta();
-        float distancePerFrame = movementSpeed * Time.deltaTime;
+    public Vector2 GetNormalizedDelta() =>
+        GetDelta() / (DataParams.Character.MovementSpeed * Time.deltaTime);
 
-        return distancePerFrame == 0 ? Vector2.zero : _lastDelta /distancePerFrame;
-    }
-
-    private void UpdateDelta()
+    private Vector3 GetDelta()
     {
-        Vector3 worldDelta = _transform.position - _previousPosition;
-        _lastDelta = _transform.InverseTransformDirection(worldDelta);
+        Vector3 delta = Utils.ResetHeight(_transform.position) - Utils.ResetHeight(_previousPosition);
+        delta = _transform.InverseTransformDirection(delta);
         _previousPosition = _transform.position;
-    }    
+
+        return new(delta.x, delta.z);
+    }
 }

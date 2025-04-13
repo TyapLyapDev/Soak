@@ -6,99 +6,68 @@ public class SmartBot : Character
     [SerializeField] private PointToHide[] _pointToHide;
     [SerializeField] private GazeDirection _gazeDirection;
 
-    private readonly BotRotationTypeSwitcher _rotationTypeSwitcher = new();
-    private readonly BotMovementTypeSwitcher _movementTypeSwitcher = new();
-    private DirectionNormalizer _directionNormalizer;
     private BotTargetSwitcher _targetSwitcher;
-    private BotRotatorToTarget _rotatorToTarget;
-    private BotLookingAroundRotator _lookingAroundRotator;
-    private BotForwardRotator _forwardRotator;
+    private SmartBotMover _botMover;
+    private SmartBotRotator _botRotator;
 
     protected override void Awake()
     {
         base.Awake();
-        _directionNormalizer = new(transform);
+        _botMover = new(this);
+        _botRotator = new(this, _gazeDirection);
         _targetSwitcher = new(transform, _pointToHide.Select(t => t.transform).ToArray());
-        _rotatorToTarget = new(transform, _gazeDirection.transform);
-        _lookingAroundRotator = new(transform, _gazeDirection.transform);
-        _forwardRotator = new(transform, _gazeDirection.transform);
     }
 
-    private void Update()
+    private void Update() =>
+        OnMove();
+
+    protected override void OnEnable()
     {
-        UpdateMovement();
-        UpdateRotation();
+        base.OnEnable();
+        _botMover.Sneaked += OnSneacked;
+        _botMover.Rised += OnRised;
+        _botMover.Slowed += OnSlowed;
+        _targetSwitcher.Switched += OnTargetSwitched;
     }
 
-    private void OnEnable()
+    protected override void OnDisable()
     {
-        _targetSwitcher.TargetAchieved += OnTargetAchieved;
-        _rotatorToTarget.NoTarget += OnLossTarget;
+        base.OnDisable();
+        _botMover.Sneaked -= OnSneacked;
+        _botMover.Rised -= OnRised;
+        _botMover.Slowed -= OnSlowed;
+        _targetSwitcher.Switched -= OnTargetSwitched;
     }
 
-    private void OnDisable()
+    private void OnMove()
     {
-        _targetSwitcher.TargetAchieved -= OnTargetAchieved;
-        _rotatorToTarget.NoTarget -= OnLossTarget;
+        Vector2 input = _targetSwitcher.GetDirectionToTarget();
+        _botRotator.UpdateLastMovementDirection(new(input.x, 0, input.y));
+        _botRotator.UpdateTargetPosition(_targetSwitcher.TargetPosition);
+
+        if (_botMover.IsMoving == false)
+            input = Vector2.zero;
+
+        Move(input);
     }
 
-    private void OnTargetAchieved() { }
-
-    private void OnLossTarget() =>
-        _rotationTypeSwitcher.SetNewRandomType();
-
-    private void UpdateMovement()
+    private void OnSneacked()
     {
-        switch (_movementTypeSwitcher.GetCurrentType())
-        {
-            case MovementType.NoMovement:
-                ProcessSwitch(false, 0);
-                break;
-
-            case MovementType.NoMovementAndSneaking:
-                ProcessSwitch(true, 0);
-                break;
-
-            case MovementType.Walking:
-                ProcessSwitch(false, 0.4f);
-                break;
-
-            case MovementType.Running:
-                ProcessSwitch(false, 1);
-                break;
-
-            case MovementType.Sneacking:
-                ProcessSwitch(true, 0.25f);
-                break;
-        }        
+        Sneack();
+        SetRunningStep();
     }
 
-    private void ProcessSwitch(bool isSneaking, float multiplierSpeed)
+    private void OnRised()
     {
-        SwitchSneacking(isSneaking);
-
-        Vector3 targetPosition = _targetSwitcher.GetCurrentTargetPosition();
-        Vector2 input = _directionNormalizer.NormalizeToMoveOnPlane(targetPosition);
-
-        _forwardRotator.UpdateLastMovementDirection(new(input.x, 0, input.y));
-        OnMove(input * multiplierSpeed);
+        Rise();
+        SetRunningStep();
     }
 
-    private void UpdateRotation()
+    private void OnSlowed()
     {
-        switch (_rotationTypeSwitcher.GetCurrentType())
-        {
-            case LookingType.Target:
-                _rotatorToTarget.UpdateRotation();
-                break;
+        Rise();
+        SetSlowingStep();
+    }
 
-            case LookingType.Around:
-                _lookingAroundRotator.UpdateRotation();
-                break;
-
-            case LookingType.Forward:
-                _forwardRotator.UpdateRotation();
-                break;
-        }
-    }    
+    private void OnTargetSwitched() { }
 }

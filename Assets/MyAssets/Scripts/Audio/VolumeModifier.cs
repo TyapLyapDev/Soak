@@ -1,32 +1,57 @@
-using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class VolumeModifier
+public class VolumeModifier : MonoBehaviour
 {
-    private const float MinLevel = -80;
-    private const float MaxLevel = 20;
-    private const float MinValue = 0;
-    private const float MaxValue = 1;
+    private const float MinimumLevel = -80;
+    private const float MaximumLevel = 20;
 
-    private readonly AudioMixer _audioMixer;
+    private const string Music = nameof(Music);
+    private const string Game = nameof(Game);
 
-    public VolumeModifier(AudioMixer audioMixer)
+    [SerializeField] private AudioMixer _mixer;
+    [SerializeField] private SliderVolumeMusic _sliderVolumeMusic;
+    [SerializeField] private SliderVolumeGame _sliderVolumeGame;
+
+    private float _minimumValueSlider;
+    private float _maximumValueSlider;
+
+    private void Start()
     {
-        _audioMixer = audioMixer;
+        _minimumValueSlider = _sliderVolumeMusic.MinimumValue;
+        _maximumValueSlider = _sliderVolumeMusic.MaximumValue;
+
+        OnChangedMusicVolume(_sliderVolumeMusic.Value);
+        OnChangedGameVolume(_sliderVolumeGame.Value);
     }
+
+    private void OnEnable()
+    {
+        _sliderVolumeMusic.ValueChanged += OnChangedMusicVolume;
+        _sliderVolumeGame.ValueChanged += OnChangedGameVolume;
+    }
+
+    private void OnDisable()
+    {
+        _sliderVolumeMusic.ValueChanged -= OnChangedMusicVolume;
+        _sliderVolumeGame.ValueChanged -= OnChangedGameVolume;
+    }
+
+    private void OnChangedMusicVolume(float value) =>
+        SetLevel(Music, value);
+
+    private void OnChangedGameVolume(float value) =>
+        SetLevel(Game, value);
 
     public void SetLevel(string group, float value)
     {
-        float level = ConvertVolumeToLevel(value);
-        _audioMixer.SetFloat(group, level);
+        float level = ConvertVolumeToLevel(NormalizeValue(value));
+        _mixer.SetFloat(group, level);
     }
 
-    private float ConvertVolumeToLevel(float value)
-    {
-        if (value < MinValue || value > MaxValue)
-            throw new ArgumentException("«начение за пределами допустимого диапазона");
+    private float NormalizeValue(float value) =>
+        Mathf.InverseLerp(_minimumValueSlider, _maximumValueSlider, value);
 
-        return value == 0 ? MinLevel : Mathf.Log10(value) * MaxLevel;
-    }
+    private float ConvertVolumeToLevel(float value) =>
+        value == 0 ? MinimumLevel : Mathf.Log10(value) * MaximumLevel;
 }

@@ -16,15 +16,15 @@ public static class DataParams
 
     public static class Inputs
     {
-        public const float MouseDragSensitivity = 0.8f;
-        public const float TouchDragSensitivity = 80f;
+        public const float MouseDragSensitivity = 3f;
+        public const float TouchDragSensitivity = 300f;
     }
 
     public static class Character
     {
         public const float MinimumVerticalRotationAngle = - 90f;
         public const float MaximumVerticalRotationAngle = 90f;
-        public const float SlowingStepMultiplierSpeed = 0.5f;
+        public const float SlowingStepMultiplierSpeed = 0.35f;
         public const float SneakingStepMultiplierSpeed = 0.35f;
         public const float MovementSpeed = 7f;
         public const float JumpingForce = 4f;
@@ -43,10 +43,10 @@ public static class DataParams
         public const string AimColorB = nameof(AimColorB);
         public const string AimScale = nameof(AimScale);
 
-        public const float ValueHorizontalRotation = 5f;
-        public const float ValueVerticalRotation = 5f;
-        public const float ValueVolumeGame = 0.9f;
-        public const float ValueVolumeMusic = 0.8f;
+        public const float ValueHorizontalRotation = 1.4f;
+        public const float ValueVerticalRotation = 1.4f;
+        public const float ValueVolumeGame = 90f;
+        public const float ValueVolumeMusic = 70f;
         public const float ValueLighting = 40f;
         public const float ValueAimColorR = 0f;
         public const float ValueAimColorG = 1f;

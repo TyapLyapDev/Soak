@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Light))]
@@ -5,27 +6,27 @@ public class LightingGame : MonoBehaviour
 {
     private const float MaximumIntensity = 5f;
 
-    [SerializeField] private SliderChangeInformer _lightSlider;
+    [SerializeField] private SliderLighting _sliderLighting;
 
     private Light _directionalLight;
     private float _minimumValueSlider;
     private float _maximumValueSlider;
 
-    private void Awake()
-    {
+    private void Awake() =>
         _directionalLight = GetComponent<Light>();
-        _minimumValueSlider = _lightSlider.MinimumValue;
-        _maximumValueSlider = _lightSlider.MaximumValue;
+
+    private void Start()
+    {
+        _minimumValueSlider = _sliderLighting.MinimumValue;
+        _maximumValueSlider = _sliderLighting.MaximumValue;
+        OnChanged(_sliderLighting.Value);
     }
 
-    private void Start() =>
-        OnChanged(_lightSlider.Value);
-
     private void OnEnable() =>
-        _lightSlider.ValueChanged += OnChanged;
+        _sliderLighting.ValueChanged += OnChanged;
 
     private void OnDisable() =>
-        _lightSlider.ValueChanged -= OnChanged;
+        _sliderLighting.ValueChanged -= OnChanged;
 
     private void OnChanged(float value)
     {

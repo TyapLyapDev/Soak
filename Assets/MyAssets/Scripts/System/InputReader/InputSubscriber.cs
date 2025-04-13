@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class InputSubscriber
 {
-    private KeyboardInputReader _keyboard;
-    private TouchInputReader _joystick;
+    private readonly KeyboardInputReader _keyboard;
+    private readonly TouchInputReader _joystick;
 
     public InputSubscriber(KeyboardInputReader keyboard, TouchInputReader joystick)
     {
@@ -12,47 +12,66 @@ public class InputSubscriber
         _joystick = joystick;
     }
 
-    public void Subscribe(Action<Vector2> RotationPressed, Action JumpPressed, Action MenuPressed)
+    public void Subscribe(
+        Action<Vector2> movementPressed, 
+        Action<Vector2> rotationPressed, 
+        Action jumpPressed, 
+        Action menuPressed, 
+        Action sneackPressed, 
+        Action rised, 
+        Action slowingStep, 
+        Action runningStep)
     {
         if (Application.isMobilePlatform)
-            SubscribeToMobile(RotationPressed, JumpPressed, MenuPressed);
+        {
+            _joystick.MovementPressed += movementPressed;
+            _joystick.RotationPressed += rotationPressed;
+            _joystick.JumpPressed += jumpPressed;
+            _joystick.SneackPressed += sneackPressed;
+            _joystick.Rised += rised;
+            _joystick.MenuPressed += menuPressed;
+        }
         else
-            SubscribeToPC(RotationPressed, JumpPressed, MenuPressed);
+        {
+            _keyboard.MovementPressed += movementPressed;
+            _keyboard.RotationPressed += rotationPressed;
+            _keyboard.JumpPressed += jumpPressed;
+            _keyboard.SneackPressed += sneackPressed;
+            _keyboard.Rised += rised;
+            _keyboard.SlowingStepPressed += slowingStep;
+            _keyboard.RunningStepPressed += runningStep;
+        }
     }
 
-    public void Unsubscribe(Action<Vector2> RotationPressed, Action JumpPressed, Action MenuPressed)
+    public void Unsubscribe(
+        Action<Vector2> movementPressed, 
+        Action<Vector2> rotationPressed, 
+        Action jumpPressed, 
+        Action menuPressed, 
+        Action sneackPressed, 
+        Action rised, 
+        Action slowingStep, 
+        Action runningStep)
     {
         if (Application.isMobilePlatform)
-            UnsubscribeFromMobile(RotationPressed, JumpPressed, MenuPressed);
+        {
+            _joystick.MovementPressed -= movementPressed;
+            _joystick.RotationPressed -= rotationPressed;
+            _joystick.JumpPressed -= jumpPressed;
+            _joystick.SneackPressed -= sneackPressed;
+            _joystick.Rised -= rised;
+            _joystick.MenuPressed -= menuPressed;
+        }
         else
-            UnsubscribeFromPC(RotationPressed, JumpPressed, MenuPressed);
-    }
-
-    public void SubscribeToMobile(Action<Vector2> RotationPressed, Action JumpPressed, Action MenuPressed)
-    {
-        _joystick.RotationPressed += RotationPressed;
-        _joystick.JumpPressed += JumpPressed;
-        _joystick.MenuPressed += MenuPressed;
-    }
-
-    public void SubscribeToPC(Action<Vector2> RotationPressed, Action JumpPressed, Action MenuPressed)
-    {
-        _keyboard.RotationPressed += RotationPressed;
-        _keyboard.JumpPressed += JumpPressed;
-        _keyboard.KeyMenuPressed += MenuPressed;
-    }
-
-    public void UnsubscribeFromMobile(Action<Vector2> RotationPressed, Action JumpPressed, Action MenuPressed)
-    {
-        _joystick.RotationPressed -= RotationPressed;
-        _joystick.JumpPressed -= JumpPressed;
-        _joystick.MenuPressed -= MenuPressed;
-    }
-
-    public void UnsubscribeFromPC(Action<Vector2> RotationPressed, Action JumpPressed, Action MenuPressed)
-    {
-        _keyboard.RotationPressed -= RotationPressed;
-        _keyboard.JumpPressed -= JumpPressed;
-        _keyboard.KeyMenuPressed -= MenuPressed;
+        {
+            _keyboard.MovementPressed -= movementPressed;
+            _keyboard.RotationPressed -= rotationPressed;
+            _keyboard.JumpPressed -= jumpPressed;
+            _keyboard.SneackPressed -= sneackPressed;
+            _keyboard.Rised -= rised;
+            _keyboard.KeyMenuPressed -= menuPressed;
+            _keyboard.SlowingStepPressed -= slowingStep;
+            _keyboard.RunningStepPressed -= runningStep;
+        }
     }
 }

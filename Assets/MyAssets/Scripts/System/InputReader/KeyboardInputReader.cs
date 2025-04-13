@@ -2,8 +2,7 @@
 using UnityEngine;
 
 public class KeyboardInputReader : MonoBehaviour
-{    
-    private const float DiagonalStepNormalizationMultiplier = 0.5f;
+{
     private const string Horizontal = "Horizontal";
     private const string Vertical = "Vertical";
     private const string MouseX = "Mouse X";
@@ -14,36 +13,31 @@ public class KeyboardInputReader : MonoBehaviour
     private const KeyCode Sneaking = KeyCode.LeftControl;
     private const KeyCode Escape = KeyCode.Escape;
 
+    public event Action<Vector2> MovementPressed;
     public event Action<Vector2> RotationPressed;
     public event Action JumpPressed;
+    public event Action SneackPressed;
+    public event Action Rised;
+    public event Action SlowingStepPressed;
+    public event Action RunningStepPressed;
     public event Action KeyMenuPressed;
 
     private void Update()
     {
+        ReadKeyMovement();
         ReadKeyJump();
         ReadKeyRotation();
         ReadKeyMenu();
+        ReadKeySneaking();
+        ReadKeySlowingStep();
     }
 
-    public bool IsSlowingStep() =>
-        Input.GetKey(SLowingStep);
-
-    public bool IsSneaking() =>
-        Input.GetKey(Sneaking);
-
-    public Vector2 GetMovement()
+    private void ReadKeyMovement()
     {
         Vector2 direction = new(Input.GetAxisRaw(Horizontal), Input.GetAxisRaw(Vertical));
+        direction = direction.normalized;
 
-        if (direction.x != 0 && direction.y != 0)
-            direction *= DiagonalStepNormalizationMultiplier;
-
-        if (IsSneaking())
-            direction *= DataParams.Character.SneakingStepMultiplierSpeed;
-        else if (IsSlowingStep())
-            direction *= DataParams.Character.SlowingStepMultiplierSpeed;
-
-        return direction;
+        MovementPressed?.Invoke(direction);
     }
 
     private void ReadKeyRotation()
@@ -59,9 +53,26 @@ public class KeyboardInputReader : MonoBehaviour
         if (Input.GetKeyDown(Jumping))
             JumpPressed?.Invoke();
     }
+
     private void ReadKeyMenu()
     {
         if (Input.GetKeyDown(Escape))
             KeyMenuPressed?.Invoke();
+    }
+
+    private void ReadKeySneaking()
+    {
+        if (Input.GetKeyDown(Sneaking))
+            SneackPressed?.Invoke();
+        else if (Input.GetKeyUp(Sneaking))
+            Rised?.Invoke();
+    }
+
+    private void ReadKeySlowingStep()
+    {
+        if (Input.GetKeyDown(SLowingStep))
+            SlowingStepPressed?.Invoke();
+        else if (Input.GetKeyUp(SLowingStep))
+            RunningStepPressed?.Invoke();
     }
 }

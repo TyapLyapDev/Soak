@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TabManager
 {
+    private readonly SoundEffectPlayer2D _sfx;
     private readonly TabContainer[] _tabsContainer;
     private readonly ButtonTab[] _buttons;
     private readonly Sprite _selectedSprite;
     private readonly Color _selectTextColor = Color.yellow;
 
-    public TabManager(Transform parent, Sprite selectedSprite)
+    private Type _currentButton;
+
+    public TabManager(Transform parent, SoundEffectPlayer2D sfx, Sprite selectedSprite)
     {
+        _sfx = sfx;
         _buttons = parent.GetComponentsInChildren<ButtonTab>(true);
         _tabsContainer = parent.GetComponentsInChildren<TabContainer>(true);
         _selectedSprite = selectedSprite;
         InitButtons();
+
+        _currentButton = typeof(ButtonTabRotation);
         Select<ButtonTabRotation>();
     }
 
@@ -36,6 +43,12 @@ public class TabManager
 
     private void OnClickButton(ButtonTab button)
     {
+        if (button.GetType() == _currentButton)
+            return;
+
+        _currentButton = button.GetType();
+        _sfx.PlayClickTabButton();
+
         DeselectButtons();
         SelectButton(button);
     }

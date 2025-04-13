@@ -14,23 +14,29 @@ public class Player : Character
         _verticalRotator = new(Camera.main.transform);
     }
 
-    private void Update() =>
-        OnMove();
-
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+        _inputInformer.MovementPressed += Move;
         _inputInformer.RotationPressed += OnRotate;
-        _inputInformer.JumpPressed += OnJump;
+        _inputInformer.JumpPressed += Jump;
+        _inputInformer.SneackPressed += Sneack;
+        _inputInformer.Rised += Rise;
+        _inputInformer.SlowingStepPressed += SetSlowingStep;
+        _inputInformer.RunningStepPressed += SetRunningStep;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+        _inputInformer.MovementPressed -= Move;
         _inputInformer.RotationPressed -= OnRotate;
-        _inputInformer.JumpPressed -= OnJump;
+        _inputInformer.JumpPressed -= Jump;
+        _inputInformer.SneackPressed -= Sneack;
+        _inputInformer.Rised -= Rise;
+        _inputInformer.SlowingStepPressed -= SetSlowingStep;
+        _inputInformer.RunningStepPressed -= SetRunningStep;
     }
-
-    private void OnMove() =>
-        OnMove(_inputInformer.GetMovement());
 
     private void OnRotate(Vector2 direction)
     {

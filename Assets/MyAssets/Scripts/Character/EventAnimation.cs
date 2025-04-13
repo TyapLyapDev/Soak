@@ -1,14 +1,13 @@
+using System;
 using UnityEngine;
 
 public class EventAnimation : MonoBehaviour
 {
-    public void OnLeftStep()
-    {
+    public event Action Stepped;
 
-    }
+    public void OnLeftStep() =>
+        Stepped?.Invoke();
 
-    public void OnRightStep()
-    {
-
-    }
+    public void OnRightStep() =>
+        Stepped?.Invoke();
 }

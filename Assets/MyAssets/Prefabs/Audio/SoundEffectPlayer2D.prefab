@@ -142,6 +142,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9927f1096dac5f4fa6a24930983def6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _windowSwitcher: {fileID: 0}
   _hoverButton: {fileID: 8300000, guid: 6ec9c266dfb1441418213554a379bb34, type: 3}
   _clickButton: {fileID: 8300000, guid: 624f61e34a34ac44c8706ba830134666, type: 3}
+  _clickTabButton: {fileID: 8300000, guid: 70385d9382278cc4080a69050e834c8f, type: 3}
+  _sliderDownPressed: {fileID: 8300000, guid: fddefafedcb5e07419e76e4f49a5a3dd, type: 3}
+  _sliderUpPressed: {fileID: 8300000, guid: d83f7ec3f5c2b9d448096082532ed1dd, type: 3}

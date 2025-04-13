@@ -6,35 +6,75 @@ public class InputInformer : MonoBehaviour
     [SerializeField] private MenuShower _menuShower;
     [SerializeField] private KeyboardInputReader _keyboard;
     [SerializeField] private TouchInputReader _joystick;
-    [SerializeField] private SliderChangeInformer _mouseSensitivityHorizontal;
-    [SerializeField] private SliderChangeInformer _mouseSensitivityVertical;
+    [SerializeField] private SliderHorizontalRotationSensitivity _mouseSensitivityHorizontal;
+    [SerializeField] private SliderVerticalRotationSensitivity _mouseSensitivityVertical;
 
     private InputSubscriber _subscriber;
 
+    public event Action<Vector2> MovementPressed;
     public event Action<Vector2> RotationPressed;
     public event Action JumpPressed;
     public event Action MenuPressed;
+    public event Action SneackPressed;
+    public event Action Rised;
+    public event Action SlowingStepPressed;
+    public event Action RunningStepPressed;
 
     private void Awake() =>
         _subscriber = new(_keyboard, _joystick);
 
-    private void OnEnable() =>
-        _subscriber.Subscribe(OnRotationPressed, OnJumpPressed, OnMenuPressed);
+    private void OnEnable()
+    {
+        _subscriber.Subscribe(
+            OnMovementPressed,
+            OnRotationPressed,
+            OnJumpPressed,
+            OnMenuPressed,
+            OnSneackPressed,
+            OnRised,
+            OnSlowingStep,
+            OnRunningStep);
+    }
 
-    private void OnDisable() =>
-        _subscriber.Unsubscribe(OnRotationPressed, OnJumpPressed, OnMenuPressed);
+    private void OnDisable()
+    {
+        _subscriber.Unsubscribe(
+            OnMovementPressed,
+            OnRotationPressed,
+            OnJumpPressed,
+            OnMenuPressed,
+            OnSneackPressed,
+            OnRised,
+            OnSlowingStep,
+            OnRunningStep);
+    }
 
-    public Vector2 GetMovement() =>
-        Application.isMobilePlatform ? _joystick.GetMovement() : _keyboard.GetMovement();
+    private void OnMovementPressed(Vector2 direction) =>
+        MovementPressed?.Invoke(direction);
+
+    private void OnRotationPressed(Vector2 direction)
+    {
+        if (_menuShower.IsShowing)
+            return;
+
+        direction *= new Vector2(_mouseSensitivityHorizontal.Value, _mouseSensitivityVertical.Value);
+        RotationPressed?.Invoke(direction);
+    }
 
     private void OnJumpPressed() =>
         JumpPressed?.Invoke();
 
-    private void OnRotationPressed(Vector2 direction)
-    {
-        if (_menuShower.IsShowing == false)
-            RotationPressed?.Invoke(direction * new Vector2(_mouseSensitivityHorizontal.Value, _mouseSensitivityVertical.Value));
-    }
+    private void OnSneackPressed() =>
+        SneackPressed?.Invoke();
+
+    private void OnRised() =>
+        Rised?.Invoke();
+
+    private void OnSlowingStep() =>
+        SlowingStepPressed?.Invoke();
+
+    private void OnRunningStep() =>
+        RunningStepPressed?.Invoke();
 
     private void OnMenuPressed() =>
         MenuPressed?.Invoke();

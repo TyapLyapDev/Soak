@@ -6,11 +6,11 @@ public class Mover
     private readonly Gravity _gravity;
     private readonly float _speed;
 
-    public Mover(CharacterController characterController, float speed)
+    public Mover(CharacterController characterController)
     {
         _characterController = characterController;
         _gravity = new(characterController);
-        _speed = speed;
+        _speed = DataParams.Character.MovementSpeed;
     }
 
     public void Move(Vector2 direction)

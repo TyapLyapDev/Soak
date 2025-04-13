@@ -14,6 +14,7 @@ public class ButtonChangeInformer : MonoBehaviour, IPointerDownHandler, IPointer
         _view = new(GetComponent<Image>(), _selectedColor);
 
     public event Action<ButtonChangeInformer> DownPressed;
+    public event Action<ButtonChangeInformer> UpPressed;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -21,6 +22,9 @@ public class ButtonChangeInformer : MonoBehaviour, IPointerDownHandler, IPointer
         DownPressed?.Invoke(this);
     }
 
-    public void OnPointerUp(PointerEventData eventData) =>
+    public void OnPointerUp(PointerEventData eventData)
+    {
         _view.Deselect();
+        UpPressed?.Invoke(this);
+    }
 }

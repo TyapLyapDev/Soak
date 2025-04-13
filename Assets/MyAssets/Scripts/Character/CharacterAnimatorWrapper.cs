@@ -12,9 +12,9 @@ public class CharacterAnimatorWrapper
     public void SwitchSneacking(bool isOn) =>
         _animator.SetBool(DataParams.Animator.IsSneaking, isOn);
 
-    public void UpdateMovement(Vector2 moveDirection)
+    public void UpdateMovement(Vector2 movementDirection)
     {
-        _animator.SetFloat(DataParams.Animator.RightMoving, moveDirection.x);
-        _animator.SetFloat(DataParams.Animator.ForwardMoving, moveDirection.y);
+        _animator.SetFloat(DataParams.Animator.RightMoving, movementDirection.x);
+        _animator.SetFloat(DataParams.Animator.ForwardMoving, movementDirection.y);
     }
 }

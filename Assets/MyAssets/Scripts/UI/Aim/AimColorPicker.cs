@@ -1,56 +1,38 @@
+using System;
 using UnityEngine;
 
 public class AimColorPicker : MonoBehaviour
 {
     [SerializeField] private AimMarker _aim;
     [SerializeField] private AimMarker _aimPreview;
-    [SerializeField] private SliderChangeInformer _redSlider;
-    [SerializeField] private SliderChangeInformer _greenSlider;
-    [SerializeField] private SliderChangeInformer _blueSlider;
-    [SerializeField] private SliderChangeInformer _sliderScalingAim;
-
-    public Color Color => new(_redSlider.Value, _greenSlider.Value, _blueSlider.Value, 1);
+    [SerializeField] private SliderAimSizer _sliderScalingAim;
+    [SerializeField] private SliderAimColorRed _redSlider;
+    [SerializeField] private SliderAimColorGreen _greenSlider;
+    [SerializeField] private SliderAimColorBlue _blueSlider;
 
     public float Scale => _sliderScalingAim.Value;
 
-    private void Start() =>
-        UpdateInfo();
-
-    private void OnEnable()
+    private void Start()
     {
-        _redSlider.ValueChanged += (float _) => UpdateInfo();
-        _greenSlider.ValueChanged += (float _) => UpdateInfo();
-        _blueSlider.ValueChanged += (float _) => UpdateInfo();
-        _sliderScalingAim.ValueChanged += (float _) => UpdateInfo();
+        _sliderScalingAim.ValueChanged += OnChanged;
+        _redSlider.ValueChanged += OnChanged;
+        _greenSlider.ValueChanged += OnChanged;
+        _blueSlider.ValueChanged += OnChanged;
+
+        OnChanged(0);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        _redSlider.ValueChanged -= (float _) => UpdateInfo();
-        _greenSlider.ValueChanged -= (float _) => UpdateInfo();
-        _blueSlider.ValueChanged -= (float _) => UpdateInfo();
-        _sliderScalingAim.ValueChanged -= (float _) => UpdateInfo();
+        _sliderScalingAim.ValueChanged -= OnChanged;
+        _redSlider.ValueChanged -= OnChanged;
+        _greenSlider.ValueChanged -= OnChanged;
+        _blueSlider.ValueChanged -= OnChanged;
     }
 
-    public void SetColor(Color color)
+    private void OnChanged(float _)
     {
-        _redSlider.SetValue(color.r);
-        _greenSlider.SetValue(color.g);
-        _blueSlider.SetValue(color.b);
-
-        UpdateInfo();
-    }
-
-    public void SetScale(float value)
-    {
-        _sliderScalingAim.SetValue(value);
-
-        UpdateInfo();
-    }
-
-    private void UpdateInfo()
-    {
-        Color color = Color;
+        Color color = new(_redSlider.Value, _greenSlider.Value, _blueSlider.Value, 1);
 
         _aimPreview.SetColor(color);
         _aimPreview.SetLocalScale(_sliderScalingAim.Value);
