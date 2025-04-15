@@ -12,6 +12,7 @@ public class KeyboardInputReader : MonoBehaviour
     private const KeyCode SLowingStep = KeyCode.LeftShift;
     private const KeyCode Sneaking = KeyCode.LeftControl;
     private const KeyCode Escape = KeyCode.Escape;
+    private const KeyCode Shooting = KeyCode.Mouse0;
 
     public event Action<Vector2> MovementPressed;
     public event Action<Vector2> RotationPressed;
@@ -21,6 +22,8 @@ public class KeyboardInputReader : MonoBehaviour
     public event Action SlowingStepPressed;
     public event Action RunningStepPressed;
     public event Action KeyMenuPressed;
+    public event Action ShootingPressed;
+    public event Action ShootingUnpressed;
 
     private void Update()
     {
@@ -30,6 +33,7 @@ public class KeyboardInputReader : MonoBehaviour
         ReadKeyMenu();
         ReadKeySneaking();
         ReadKeySlowingStep();
+        ReadKeyShooting();
     }
 
     private void ReadKeyMovement()
@@ -74,5 +78,13 @@ public class KeyboardInputReader : MonoBehaviour
             SlowingStepPressed?.Invoke();
         else if (Input.GetKeyUp(SLowingStep))
             RunningStepPressed?.Invoke();
+    }
+
+    private void ReadKeyShooting()
+    {
+        if (Input.GetKeyDown(Shooting))
+            ShootingPressed?.Invoke();
+        else if (Input.GetKeyUp(Shooting))
+            ShootingUnpressed?.Invoke();
     }
 }

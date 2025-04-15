@@ -19,6 +19,8 @@ public class InputInformer : MonoBehaviour
     public event Action Rised;
     public event Action SlowingStepPressed;
     public event Action RunningStepPressed;
+    public event Action ShootingPressed;
+    public event Action ShootingUnpressed;
 
     private void Awake() =>
         _subscriber = new(_keyboard, _joystick);
@@ -33,7 +35,9 @@ public class InputInformer : MonoBehaviour
             OnSneackPressed,
             OnRised,
             OnSlowingStep,
-            OnRunningStep);
+            OnRunningStep,
+            OnShootingPressed,
+            OnShootingUnpressed);
     }
 
     private void OnDisable()
@@ -46,7 +50,9 @@ public class InputInformer : MonoBehaviour
             OnSneackPressed,
             OnRised,
             OnSlowingStep,
-            OnRunningStep);
+            OnRunningStep,
+            OnShootingPressed,
+            OnShootingUnpressed);
     }
 
     private void OnMovementPressed(Vector2 direction) =>
@@ -78,4 +84,20 @@ public class InputInformer : MonoBehaviour
 
     private void OnMenuPressed() =>
         MenuPressed?.Invoke();
+
+    private void OnShootingPressed()
+    {
+        if (_menuShower.IsShowing)
+            return;
+
+        ShootingPressed?.Invoke();
+    }
+
+    private void OnShootingUnpressed()
+    {
+        if (_menuShower.IsShowing)
+            return;
+
+        ShootingUnpressed?.Invoke();
+    }
 }

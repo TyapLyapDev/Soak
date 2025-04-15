@@ -24,6 +24,8 @@ public class Player : Character
         _inputInformer.Rised += Rise;
         _inputInformer.SlowingStepPressed += SetSlowingStep;
         _inputInformer.RunningStepPressed += SetRunningStep;
+        _inputInformer.ShootingPressed += StartShooting;
+        _inputInformer.ShootingUnpressed += StopShooting;
     }
 
     protected override void OnDisable()
@@ -36,6 +38,8 @@ public class Player : Character
         _inputInformer.Rised -= Rise;
         _inputInformer.SlowingStepPressed -= SetSlowingStep;
         _inputInformer.RunningStepPressed -= SetRunningStep;
+        _inputInformer.ShootingPressed -= StartShooting;
+        _inputInformer.ShootingUnpressed -= StopShooting;
     }
 
     private void OnRotate(Vector2 direction)

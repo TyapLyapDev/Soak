@@ -8,6 +8,9 @@ public abstract class Character : MonoBehaviour
     [SerializeField] private CharacterModel _model;
     [SerializeField] private EventAnimation _eventAnimation;
     [SerializeField] private AudioClip _audioClip;
+    [SerializeField] private Transform _aim;
+    [SerializeField] private ParticleSystem _waterJet;
+    [SerializeField] private LayerMask _ignoreLayers;
 
     private CharacterController _controller;
     private CharacterAnimatorWrapper _characterAnimatorWrapper;
@@ -16,6 +19,8 @@ public abstract class Character : MonoBehaviour
     private Jumper _jumper;
     private Sneacker _sneacker;
     private AudioSource _audioSource;
+    private Shooter _shooter;
+
     private bool _isSlowingStep = false;
 
     private float _currentSpeed;
@@ -30,6 +35,7 @@ public abstract class Character : MonoBehaviour
         _mover = new(_controller);
         _jumper = new(_mover, DataParams.Character.JumpingForce);
         _sneacker = new(_controller, _model);
+        _shooter = new(_aim, _waterJet, _ignoreLayers);
     }
 
     protected virtual void OnEnable() =>
@@ -84,5 +90,15 @@ public abstract class Character : MonoBehaviour
     {
         if (_currentSpeed > 0.9f)
             _audioSource.PlayOneShot(_audioClip);
+    }
+
+    protected void StartShooting()
+    {
+        _shooter.Start();
+    }
+
+    protected void StopShooting()
+    {
+        _shooter.Stop();
     }
 }

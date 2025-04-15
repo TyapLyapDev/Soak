@@ -29,7 +29,7 @@ public class Sneacker
 
         _valueRisingController = _controller.height;
         _valueSneackingController = _valueRisingController * SneackingMultiplier;
-        _risingPositionModel = _model.localPosition.y;
+        _risingPositionModel = 0;
         _sneackingPositionModel = _risingPositionModel + _valueSneackingController * 0.5f;
     }
 
@@ -53,6 +53,7 @@ public class Sneacker
         if (_controller.height == _controllerTarget && _model.localPosition.y == _modelTarget)
         {
             _rutine.Stop();
+
             return;
         }
 

@@ -1,21 +1,27 @@
-using System.Linq;
+using System;
 using UnityEngine;
 
-public class SmartBot : Character
-{
+public class SmartBot : Character, IDeactivatable<SmartBot>
+{    
     [SerializeField] private PointToHide[] _pointToHide;
     [SerializeField] private GazeDirection _gazeDirection;
+    [SerializeField] private bool _isPatrolling;
 
     private BotTargetSwitcher _targetSwitcher;
+    private BotFreeMovement _freeMovement;
     private SmartBotMover _botMover;
     private SmartBotRotator _botRotator;
+
+    public event Action<SmartBot> Deactivated;
 
     protected override void Awake()
     {
         base.Awake();
         _botMover = new(this);
+        _freeMovement = new(this);
         _botRotator = new(this, _gazeDirection);
-        _targetSwitcher = new(transform, _pointToHide.Select(t => t.transform).ToArray());
+        //_targetSwitcher = new(transform, _pointToHide.Select(t => t.transform).ToArray());
+        _targetSwitcher = new(transform, null);
     }
 
     private void Update() =>
@@ -28,6 +34,7 @@ public class SmartBot : Character
         _botMover.Rised += OnRised;
         _botMover.Slowed += OnSlowed;
         _targetSwitcher.Switched += OnTargetSwitched;
+        _freeMovement.JumpOpened += OnJumpOpened;
     }
 
     protected override void OnDisable()
@@ -37,11 +44,24 @@ public class SmartBot : Character
         _botMover.Rised -= OnRised;
         _botMover.Slowed -= OnSlowed;
         _targetSwitcher.Switched -= OnTargetSwitched;
+        _freeMovement.JumpOpened -= OnJumpOpened;
     }
+
+    public void Deactivate() =>
+        Deactivated?.Invoke(this);
 
     private void OnMove()
     {
-        Vector2 input = _targetSwitcher.GetDirectionToTarget();
+        Vector2 input;
+
+        if (_isPatrolling)
+        {
+            input = _targetSwitcher.GetInputToTarget();
+        }
+        else
+        {
+            input = _freeMovement.Input;
+        }
 
         if (_botMover.IsMoving == false)
             input = Vector2.zero;
@@ -69,4 +89,7 @@ public class SmartBot : Character
 
     private void OnTargetSwitched() =>
         _botRotator.UpdateTarget(_targetSwitcher.Target);
+
+    private void OnJumpOpened() =>
+        Jump();    
 }

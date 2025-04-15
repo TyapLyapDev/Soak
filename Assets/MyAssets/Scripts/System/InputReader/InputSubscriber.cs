@@ -20,26 +20,31 @@ public class InputSubscriber
         Action sneackPressed, 
         Action rised, 
         Action slowingStep, 
-        Action runningStep)
+        Action runningStep,
+        Action shootingPressed,
+        Action shootingUnpressed)
     {
         if (Application.isMobilePlatform)
         {
             _joystick.MovementPressed += movementPressed;
             _joystick.RotationPressed += rotationPressed;
             _joystick.JumpPressed += jumpPressed;
+            _joystick.MenuPressed += menuPressed;
             _joystick.SneackPressed += sneackPressed;
             _joystick.Rised += rised;
-            _joystick.MenuPressed += menuPressed;
         }
         else
         {
             _keyboard.MovementPressed += movementPressed;
             _keyboard.RotationPressed += rotationPressed;
             _keyboard.JumpPressed += jumpPressed;
+            _keyboard.KeyMenuPressed += menuPressed;
             _keyboard.SneackPressed += sneackPressed;
             _keyboard.Rised += rised;
             _keyboard.SlowingStepPressed += slowingStep;
             _keyboard.RunningStepPressed += runningStep;
+            _keyboard.ShootingPressed += shootingPressed;
+            _keyboard.ShootingUnpressed += shootingUnpressed;
         }
     }
 
@@ -51,27 +56,31 @@ public class InputSubscriber
         Action sneackPressed, 
         Action rised, 
         Action slowingStep, 
-        Action runningStep)
+        Action runningStep,
+        Action shootingPressed,
+        Action shootingUnpressed)
     {
         if (Application.isMobilePlatform)
         {
             _joystick.MovementPressed -= movementPressed;
             _joystick.RotationPressed -= rotationPressed;
             _joystick.JumpPressed -= jumpPressed;
+            _joystick.MenuPressed -= menuPressed;
             _joystick.SneackPressed -= sneackPressed;
             _joystick.Rised -= rised;
-            _joystick.MenuPressed -= menuPressed;
         }
         else
         {
             _keyboard.MovementPressed -= movementPressed;
             _keyboard.RotationPressed -= rotationPressed;
             _keyboard.JumpPressed -= jumpPressed;
+            _keyboard.KeyMenuPressed -= menuPressed;
             _keyboard.SneackPressed -= sneackPressed;
             _keyboard.Rised -= rised;
-            _keyboard.KeyMenuPressed -= menuPressed;
             _keyboard.SlowingStepPressed -= slowingStep;
             _keyboard.RunningStepPressed -= runningStep;
+            _keyboard.ShootingPressed -= shootingPressed;
+            _keyboard.ShootingUnpressed -= shootingUnpressed;
         }
     }
 }
