@@ -11,6 +11,7 @@ public class SmartBotRotator
     private readonly BotForwardRotator _forwardRotator;
     private readonly Rutine _rutine;
 
+
     private Dictionary<LookingType, Action> _states;
 
     public SmartBotRotator(MonoBehaviour mono, GazeDirection gazeDirection)
@@ -27,10 +28,29 @@ public class SmartBotRotator
         _rotatorToTarget.NoTarget += OnTargetNull;
     }
 
+    public void Stop() =>
+        _rutine.Stop();
+
+    public void Start() =>
+        _rutine.Start();
+
     public void UpdateTarget(Transform target)
     {
         _forwardRotator.UpdateTarget(target);
         _rotatorToTarget.UpdateTarget(target);
+    }
+
+    public void RotateToEnemyTarget()
+    {
+        _rotationTypeSwitcher.Stop();
+        _rotationTypeSwitcher.SetCurrentType(LookingType.Target);
+        _rotatorToTarget.SetOffset(new(0, 1.3f, 0));
+    }
+
+    public void RotateWithoutEnemy()
+    {
+        _rotationTypeSwitcher.Start();
+        _rotatorToTarget.SetOffset(new(0, 0, 0));
     }
 
     private void InitStates()

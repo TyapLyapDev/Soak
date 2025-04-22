@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public static class DataParams
 {
     public static class SceneNames
@@ -26,9 +28,77 @@ public static class DataParams
         public const float MaximumVerticalRotationAngle = 90f;
         public const float SlowingStepMultiplierSpeed = 0.35f;
         public const float SneakingStepMultiplierSpeed = 0.35f;
+        public const float SneackingHeightMultiplier = 0.5f;
         public const float MovementSpeed = 7f;
         public const float JumpingForce = 4f;
         public const float Gravity = 10f;
+        public const float MaximumRayDistance = 100f;
+
+        public const string TeamNoName = "Без команды";
+        public const string TeamTerroristsName = "Хулиганы";
+        public const string TeamCounterTerroristName = "Защитники";
+
+        public const string HintFriendTeam = "Кореш : ";
+        public const string HintEnemyTeam = "Вражина : ";
+
+        public static readonly string[] Names = 
+        { 
+            "Скуфидон",
+            "Душнидзе",
+            "Дотоша",
+            "Частоплюй",
+            "Засисьник",
+            "Мудзилла",
+            "Дерьмозавр",
+            "Лезбовский",
+            "Пепе Ронни",
+            "КоJI6acKa",
+            "АпЧитер",
+            "Гоу-Няшка",
+            "Кукумбер",
+            "Пивосос",
+            "Укурок",
+            "Штопанный рыцарь",
+            "Ихтиандр",
+            "Доктор Ху",
+            "Говнодавчик",
+            "Полупсих",
+            "PSIH",
+            "Местный Вася",
+            "Вездессущий",
+            "Андройд Айосович",
+            "Кон Чен Ый",
+            "Килька",
+            "Жмопс",
+            "Весёлый Мясник",
+            "Курвабобр",
+            "Кузькин Отец",
+            "Писюн",
+            "Кусок Добра",
+            "Джеймс Болт",
+            "Криндерман",
+            "Шваброид",
+            "Дерьминатор",
+            "Каллобок",
+            "Шаурмагеддон",
+            "ТикТокенштейн",
+            "Хацкер с лопатой",
+            "Абкакалипсис",
+            "Милфмен",
+            "Аццкий Бздюльтерьер",
+            "Лютый токсик",
+            "Мы вбежопасности",
+            "Альтунец",
+            "Пендальф",
+            "Жрать Вейдер",
+            "Джек-Попрошитель",
+            "Чайничек",
+            "Пипидастр",
+            "Обдолбыш",
+            "Эпичный пшик",
+            "Дупло_и_бал",
+            "Чмонстр",
+        };
     }
 
     public static class SaveOptions

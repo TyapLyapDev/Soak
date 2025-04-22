@@ -8,6 +8,8 @@ public class SoundEffectPlayer2D : MonoBehaviour
     [SerializeField] private AudioClip _clickTabButton;
     [SerializeField] private AudioClip _sliderDownPressed;
     [SerializeField] private AudioClip _sliderUpPressed;
+    [SerializeField] private AudioClip _counterTerroristWin;
+    [SerializeField] private AudioClip _terroristWin;
 
     private AudioSource _audioSource;
 
@@ -28,4 +30,10 @@ public class SoundEffectPlayer2D : MonoBehaviour
 
     public void PlaySliderUpPressed() =>
         _audioSource.PlayOneShot(_sliderUpPressed);
+    
+    public void PlayCounterTerroristWin() =>
+        _audioSource.PlayOneShot(_counterTerroristWin);
+
+    public void PlayTerroristWin() =>
+        _audioSource.PlayOneShot(_terroristWin);
 }

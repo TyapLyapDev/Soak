@@ -13,6 +13,10 @@ public class KeyboardInputReader : MonoBehaviour
     private const KeyCode Sneaking = KeyCode.LeftControl;
     private const KeyCode Escape = KeyCode.Escape;
     private const KeyCode Shooting = KeyCode.Mouse0;
+    private const KeyCode BotAdd = KeyCode.LeftBracket;
+    private const KeyCode BotRemove = KeyCode.RightBracket;
+    private const KeyCode BotKill = KeyCode.Minus;
+    private const KeyCode ShowStats = KeyCode.Tab;
 
     public event Action<Vector2> MovementPressed;
     public event Action<Vector2> RotationPressed;
@@ -24,6 +28,11 @@ public class KeyboardInputReader : MonoBehaviour
     public event Action KeyMenuPressed;
     public event Action ShootingPressed;
     public event Action ShootingUnpressed;
+    public event Action BotAddPressed;
+    public event Action BotRemovePressed;
+    public event Action BotKillPressed;
+    public event Action StatsPressed;
+    public event Action StatsUnpressed;
 
     private void Update()
     {
@@ -34,6 +43,10 @@ public class KeyboardInputReader : MonoBehaviour
         ReadKeySneaking();
         ReadKeySlowingStep();
         ReadKeyShooting();
+        ReadKeyBotAdd();
+        ReadKeyBotRemove();
+        ReadKeyBotKill();
+        ReadKeyShowStats();
     }
 
     private void ReadKeyMovement()
@@ -86,5 +99,32 @@ public class KeyboardInputReader : MonoBehaviour
             ShootingPressed?.Invoke();
         else if (Input.GetKeyUp(Shooting))
             ShootingUnpressed?.Invoke();
+    }
+
+    private void ReadKeyBotAdd()
+    {
+        if (Input.GetKeyDown(BotAdd))
+            BotAddPressed?.Invoke();
+    }
+
+    private void ReadKeyBotRemove()
+    {
+        if (Input.GetKeyDown(BotRemove))
+            BotRemovePressed?.Invoke();
+    }
+
+    private void ReadKeyBotKill()
+    {
+        if (Input.GetKeyDown(BotKill))
+            BotKillPressed?.Invoke();
+    }
+    
+    private void ReadKeyShowStats()
+    {
+        if (Input.GetKeyDown(ShowStats))
+            StatsPressed?.Invoke();
+
+        if (Input.GetKeyUp(ShowStats))
+            StatsUnpressed?.Invoke();
     }
 }

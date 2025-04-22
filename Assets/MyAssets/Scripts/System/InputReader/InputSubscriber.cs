@@ -1,86 +1,78 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputSubscriber
 {
     private readonly KeyboardInputReader _keyboard;
     private readonly TouchInputReader _joystick;
 
-    public InputSubscriber(KeyboardInputReader keyboard, TouchInputReader joystick)
+    private readonly InputEventContainer _event;
+
+    public InputSubscriber(KeyboardInputReader keyboard, TouchInputReader joystick, InputEventContainer eventConteiner)
     {
         _keyboard = keyboard;
         _joystick = joystick;
+        _event = eventConteiner;
     }
 
-    public void Subscribe(
-        Action<Vector2> movementPressed, 
-        Action<Vector2> rotationPressed, 
-        Action jumpPressed, 
-        Action menuPressed, 
-        Action sneackPressed, 
-        Action rised, 
-        Action slowingStep, 
-        Action runningStep,
-        Action shootingPressed,
-        Action shootingUnpressed)
+    public void Subscribe()
     {
         if (Application.isMobilePlatform)
         {
-            _joystick.MovementPressed += movementPressed;
-            _joystick.RotationPressed += rotationPressed;
-            _joystick.JumpPressed += jumpPressed;
-            _joystick.MenuPressed += menuPressed;
-            _joystick.SneackPressed += sneackPressed;
-            _joystick.Rised += rised;
+            _joystick.MovementPressed += _event.MovementPressed;
+            _joystick.RotationPressed += _event.RotationPressed;
+            _joystick.JumpPressed += _event.JumpPressed;
+            _joystick.MenuPressed += _event.MenuPressed;
+            _joystick.SneackPressed += _event.SneackPressed;
+            _joystick.Rised += _event.Rised;
         }
         else
         {
-            _keyboard.MovementPressed += movementPressed;
-            _keyboard.RotationPressed += rotationPressed;
-            _keyboard.JumpPressed += jumpPressed;
-            _keyboard.KeyMenuPressed += menuPressed;
-            _keyboard.SneackPressed += sneackPressed;
-            _keyboard.Rised += rised;
-            _keyboard.SlowingStepPressed += slowingStep;
-            _keyboard.RunningStepPressed += runningStep;
-            _keyboard.ShootingPressed += shootingPressed;
-            _keyboard.ShootingUnpressed += shootingUnpressed;
+            _keyboard.MovementPressed += _event.MovementPressed;
+            _keyboard.RotationPressed += _event.RotationPressed;
+            _keyboard.JumpPressed += _event.JumpPressed;
+            _keyboard.KeyMenuPressed += _event.MenuPressed;
+            _keyboard.SneackPressed += _event.SneackPressed;
+            _keyboard.Rised += _event.Rised;
+            _keyboard.SlowingStepPressed += _event.SlowingStepPressed;
+            _keyboard.RunningStepPressed += _event.RunningStepPressed;
+            _keyboard.ShootingPressed += _event.ShootingPressed;
+            _keyboard.ShootingUnpressed += _event.ShootingUnpressed;
+            _keyboard.BotAddPressed += _event.BotAddPressed;
+            _keyboard.BotRemovePressed += _event.BotRemovePressed;
+            _keyboard.BotKillPressed += _event.BotKillPressed;
+            _keyboard.StatsPressed += _event.StatsPressed;
+            _keyboard.StatsUnpressed += _event.StatsUnpressed;
         }
     }
 
-    public void Unsubscribe(
-        Action<Vector2> movementPressed, 
-        Action<Vector2> rotationPressed, 
-        Action jumpPressed, 
-        Action menuPressed, 
-        Action sneackPressed, 
-        Action rised, 
-        Action slowingStep, 
-        Action runningStep,
-        Action shootingPressed,
-        Action shootingUnpressed)
+    public void Unsubscribe()
     {
         if (Application.isMobilePlatform)
         {
-            _joystick.MovementPressed -= movementPressed;
-            _joystick.RotationPressed -= rotationPressed;
-            _joystick.JumpPressed -= jumpPressed;
-            _joystick.MenuPressed -= menuPressed;
-            _joystick.SneackPressed -= sneackPressed;
-            _joystick.Rised -= rised;
+            _joystick.MovementPressed -= _event.MovementPressed;
+            _joystick.RotationPressed -= _event.RotationPressed;
+            _joystick.JumpPressed -= _event.JumpPressed;
+            _joystick.MenuPressed -= _event.MenuPressed;
+            _joystick.SneackPressed -= _event.SneackPressed;
+            _joystick.Rised -= _event.Rised;
         }
         else
         {
-            _keyboard.MovementPressed -= movementPressed;
-            _keyboard.RotationPressed -= rotationPressed;
-            _keyboard.JumpPressed -= jumpPressed;
-            _keyboard.KeyMenuPressed -= menuPressed;
-            _keyboard.SneackPressed -= sneackPressed;
-            _keyboard.Rised -= rised;
-            _keyboard.SlowingStepPressed -= slowingStep;
-            _keyboard.RunningStepPressed -= runningStep;
-            _keyboard.ShootingPressed -= shootingPressed;
-            _keyboard.ShootingUnpressed -= shootingUnpressed;
+            _keyboard.MovementPressed -= _event.MovementPressed;
+            _keyboard.RotationPressed -= _event.RotationPressed;
+            _keyboard.JumpPressed -= _event.JumpPressed;
+            _keyboard.KeyMenuPressed -= _event.MenuPressed;
+            _keyboard.SneackPressed -= _event.SneackPressed;
+            _keyboard.Rised -= _event.Rised;
+            _keyboard.SlowingStepPressed -= _event.SlowingStepPressed;
+            _keyboard.RunningStepPressed -= _event.RunningStepPressed;
+            _keyboard.ShootingPressed -= _event.ShootingPressed;
+            _keyboard.ShootingUnpressed -= _event.ShootingUnpressed;
+            _keyboard.BotAddPressed -= _event.BotAddPressed;
+            _keyboard.BotRemovePressed -= _event.BotRemovePressed;
+            _keyboard.BotKillPressed -= _event.BotKillPressed;
+            _keyboard.StatsPressed -= _event.StatsPressed;
+            _keyboard.StatsUnpressed -= _event.StatsUnpressed;
         }
     }
 }

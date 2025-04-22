@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class MenuShower : MonoBehaviour
 {
+    [SerializeField] private InputInformer _informer;
     [SerializeField] private WindowSwitcher _windowSwitcher;
-    [SerializeField] private InputInformer _inputInformer;
     [SerializeField] private GameObject _canvasMobile;
 
     private bool _isShowing;
@@ -18,14 +18,14 @@ public class MenuShower : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputInformer.MenuPressed += OnMenuPressed;
+        _informer.MenuPressed += OnMenuPressed;
         _windowSwitcher.ReturnToGamePressed += OnMenuPressed;
     }
 
     private void OnDisable()
     {
-        _inputInformer.MenuPressed -= OnMenuPressed;
-        _windowSwitcher.ReturnToGamePressed += OnMenuPressed;
+        _informer.MenuPressed -= OnMenuPressed;
+        _windowSwitcher.ReturnToGamePressed -= OnMenuPressed;
     }
 
     private void OnMenuPressed()

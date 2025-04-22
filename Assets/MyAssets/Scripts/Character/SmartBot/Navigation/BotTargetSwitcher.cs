@@ -9,7 +9,7 @@ public class BotTargetSwitcher
     private readonly Transform _transform;
     private readonly Transform[] _points;
     private int _targetId = 0;
-    private Transform _currentTarget;
+    private Transform _currentTarget;    
 
     public event Action Switched;
 
@@ -23,10 +23,22 @@ public class BotTargetSwitcher
             return;
 
         SetNewCurrentTarget();
-        _rutine.Start();
+        Start();
     }
 
     public Transform Target => _currentTarget;
+
+    public void Start() =>
+        _rutine.Start();
+
+    public void Stop() => 
+        _rutine.Stop();
+
+    public void SetTarget(Transform target)
+    {
+        _currentTarget = target;
+        Switched?.Invoke();
+    }
 
     public Vector2 GetInputToTarget()
     {

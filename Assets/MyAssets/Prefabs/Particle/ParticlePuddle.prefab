@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2987181671724058643}
   - component: {fileID: 1441027326414710753}
   - component: {fileID: 7143378018512373522}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ParticlePuddle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4858,7 +4858,7 @@ GameObject:
   - component: {fileID: 8991888268579814363}
   - component: {fileID: 5558746505469519287}
   - component: {fileID: 82075228497117679}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ParticlePuddle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

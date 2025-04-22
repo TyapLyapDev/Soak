@@ -20,6 +20,12 @@ public class SmartBotMover
         InitStates();
     }
 
+    public void Stop() =>
+        _movementTypeSwitcher.Stop();
+
+    public void Start() =>
+        _movementTypeSwitcher.Start();
+
     public bool IsMoving => _isMoving;
 
     private void InitStates()

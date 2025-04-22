@@ -21,10 +21,19 @@ public class BotRotationTypeSwitcher
         _rutine = new(mono, UpdateInfo);
 
         SetNewRandomType();
-        _rutine.Start();
+        Start();
     }
 
     public LookingType GetCurrentType => _currentType;
+
+    public void Start() =>
+        _rutine.Start();
+
+    public void Stop() =>
+        _rutine.Stop();
+
+    public void SetCurrentType(LookingType type) =>
+        _currentType = type;
 
     private void UpdateInfo()
     {

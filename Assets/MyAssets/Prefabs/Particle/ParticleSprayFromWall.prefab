@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8932030451102066592}
   - component: {fileID: 6050101542644969710}
   - component: {fileID: 8008875341495013552}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: ParticleSprayFromWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

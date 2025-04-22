@@ -24,7 +24,7 @@ public class Puddle : MonoBehaviour, IDeactivatable<Puddle>
     private void OnEnable() =>
         StartCoroutine(DeactivateOverTime());
 
-    public void Deactivate() =>
+    public void ReturnInPool() =>
         Deactivated?.Invoke(this);
 
     private IEnumerator DeactivateOverTime()
@@ -34,6 +34,6 @@ public class Puddle : MonoBehaviour, IDeactivatable<Puddle>
         while (_puddle.isPlaying)
             yield return null;
 
-        Deactivate();
+        ReturnInPool();
     }
 }

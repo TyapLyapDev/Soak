@@ -2,7 +2,6 @@
 
 public class SprayFromWallShower : MonoBehaviour
 {
-    [SerializeField] private WaterJet[] _jets;
     [SerializeField] private Spray _sprayPrefab;
     [SerializeField] private Puddle _puddlePrefab;
 
@@ -15,17 +14,11 @@ public class SprayFromWallShower : MonoBehaviour
         _puddlePool = new(_puddlePrefab, transform);
     }
 
-    private void OnEnable()
-    {
-        foreach (WaterJet jet in _jets)
-            jet.Collided += OnCollision;
-    }
+    public void Subscribe(WaterJet jet) =>
+        jet.Collided += OnCollision;
 
-    private void OnDisable()
-    {
-        foreach (WaterJet jet in _jets)
-            jet.Collided -= OnCollision;
-    }
+    public void Unsubscribe(WaterJet jet) =>
+        jet.Collided -= OnCollision;
 
     private void OnCollision(Vector3 position, Quaternion rotation)
     {

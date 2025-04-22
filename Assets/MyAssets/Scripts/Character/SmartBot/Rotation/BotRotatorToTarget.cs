@@ -14,6 +14,8 @@ public class BotRotatorToTarget
     private float _duration;
     private float _currentSpeed;
 
+    private Vector3 _offset;
+
     public event Action NoTarget;
 
     public BotRotatorToTarget(Transform horizontal, Transform vertical)
@@ -26,6 +28,9 @@ public class BotRotatorToTarget
 
     public void UpdateTarget(Transform target) =>
         _target = target;
+
+    public void SetOffset(Vector3 offset) =>
+        _offset = offset;
 
     public void UpdateRotation()
     {
@@ -54,7 +59,7 @@ public class BotRotatorToTarget
 
     private void RotateHorizontal()
     {
-        Vector3 direction = _target.position - _horizontal.position;
+        Vector3 direction = (_target.position + _offset) - _horizontal.position;
         direction.y = 0;
 
         if (direction == Vector3.zero)
@@ -66,7 +71,7 @@ public class BotRotatorToTarget
 
     private void RotateVerticalTowards()
     {
-        Vector3 direction = _target.position - _vertical.transform.position;
+        Vector3 direction = _target.position + _offset - _vertical.transform.position;
         float angle = Vector3.SignedAngle(_horizontal.forward, direction, _horizontal.right);
         angle = Mathf.Clamp(angle, DataParams.Character.MinimumVerticalRotationAngle, DataParams.Character.MaximumVerticalRotationAngle);
         Quaternion targetRotation = Quaternion.Euler(angle, 0, 0);

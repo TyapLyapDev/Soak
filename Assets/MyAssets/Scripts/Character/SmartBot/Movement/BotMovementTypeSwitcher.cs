@@ -30,6 +30,12 @@ public class BotMovementTypeSwitcher
 
     public MovementType GetCurrentType => _currentType;
 
+    public void Stop() =>
+        _rutine.Stop();
+
+    public void Start() =>
+        _rutine.Start();
+
     private void UpdateInfo()
     {
         _timer += Time.deltaTime;

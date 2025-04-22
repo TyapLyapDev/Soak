@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3401516357016419315}
   - component: {fileID: 8724684959685192390}
   - component: {fileID: 6696045012573758075}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ParticleSprayAroundGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4854,7 +4854,7 @@ GameObject:
   - component: {fileID: 5709644259299312070}
   - component: {fileID: 6302108488364761149}
   - component: {fileID: 2415592615483153227}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: ParticleWaterJet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4894,7 +4894,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -8633,22 +8633,22 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 0.001
+    radiusScale: 0.002
     collidesWith:
       serializedVersion: 2
-      m_Bits: 3
+      m_Bits: 129
     maxCollisionShapes: 10000
     quality: 0
     voxelSize: 0.5
     collisionMessages: 1
-    collidesWithDynamic: 0
+    collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
     enabled: 0
     serializedVersion: 2
     inside: 1
     outside: 0
-    enter: 0
+    enter: 1
     exit: 0
     colliderQueryMode: 0
     radiusScale: 1
@@ -9699,8 +9699,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de7c35f01ca9014dacd08bd9cb4004d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sprayPrefab: {fileID: 8008875341495013552, guid: 3321b8864333db3469657b44bc83ee3d, type: 3}
-  _puddlePrefab: {fileID: 82075228497117679, guid: cc847dbaf51775043b0f85f97387fc91, type: 3}
 --- !u!1 &5381939209960175054
 GameObject:
   m_ObjectHideFlags: 0

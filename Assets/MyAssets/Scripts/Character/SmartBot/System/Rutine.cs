@@ -15,6 +15,12 @@ public class Rutine
         _methodToUpdate = methodToUpdate;
     }
 
+    public Rutine(Transform transform, Action methodToUpdate)
+    {
+        _mono = transform.GetComponent<MonoBehaviour>();
+        _methodToUpdate = methodToUpdate;
+    }
+
     public bool IsOn => _isOn;
 
     public void Start()
@@ -23,6 +29,10 @@ public class Rutine
             return;
 
         _isOn = true;
+
+        if(_mono == null)
+            return;
+
         _coroutine = _mono.StartCoroutine(Updating());
     }
 

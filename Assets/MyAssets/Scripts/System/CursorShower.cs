@@ -10,9 +10,32 @@ public class CursorShower : MonoBehaviour
     private void OnDisable() =>
         _menuShower.ShowingStateChanged -= OnShowingStateChanged;
 
-    private void OnShowingStateChanged(bool isShowing) =>
-        Cursor.visible = isShowing;
-
-    private void OnApplicationFocus(bool focus) =>
+    private void OnApplicationFocus(bool focus)
+    {
         Cursor.visible = focus && _menuShower.IsShowing == false ? false : true;
+        if (focus && _menuShower.IsShowing == false)
+            HideCursor();
+        else
+            ShowCursor();
+    }
+
+    private void OnShowingStateChanged(bool isShowing)
+    {
+        if (isShowing)
+            ShowCursor();
+        else
+            HideCursor();
+    }
+
+    private void ShowCursor()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    private void HideCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 }

@@ -1,104 +1,161 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AudioSource))]
 public abstract class Character : MonoBehaviour
 {
-    [SerializeField] private Animator _animator;
-    [SerializeField] private CharacterModel _model;
-    [SerializeField] private EventAnimation _eventAnimation;
-    [SerializeField] private AudioClip _audioClip;
-    [SerializeField] private Transform _aim;
-    [SerializeField] private ParticleSystem _waterJet;
-    [SerializeField] private LayerMask _ignoreLayers;
+    private CharacterComponentSearcher _initializer;
+    private CharacterAudio _audio;
+    private CharacterPhysics _physics;
+    private CharacterView _view;
+    private Health _health;
+    private Transform _centerModel;
+    private HashSet<Collider> _colliders;
+    private WaterJet _jet;
 
-    private CharacterController _controller;
-    private CharacterAnimatorWrapper _characterAnimatorWrapper;
-    private DeltaMovementCalculator _deltaCalculator;
-    private Mover _mover;
-    private Jumper _jumper;
-    private Sneacker _sneacker;
-    private AudioSource _audioSource;
-    private Shooter _shooter;
+    private TeamTypes _team;
+    private string _name;
+    private int _countKill;
+    private int _countDeath;
 
-    private bool _isSlowingStep = false;
+    private bool _isDeath;
 
-    private float _currentSpeed;
+    public event Action<Character, float> HealthChanged;
+    public event Action<Character> Died;
+
+    public string Name => _name;
+
+    public TeamTypes Team => _team;
+
+    public int CountKill => _countKill;
+
+    public int CountDeath => _countDeath;
+
+    public float Health => _health.Value;
+
+    public bool IsDeath => _isDeath;
+
+    public Character Killer => _physics.Killer;
+
+    public Transform Center => _centerModel.transform;
+
+    public WaterJet Jet => _jet;
+
+    public HashSet<Collider> Colliders => _colliders;
 
     protected virtual void Awake()
     {
-        _controller = GetComponent<CharacterController>();
-        _audioSource = GetComponent<AudioSource>();
+        _initializer = new(this);
+        _centerModel = _initializer.GetCenterModel();      
+        _view = _initializer.GetView();
+        _colliders = _initializer.GetColliders();
+        _jet = _initializer.GetWaterJet();        
 
-        _characterAnimatorWrapper = new(_animator);
-        _deltaCalculator = new(transform);
-        _mover = new(_controller);
-        _jumper = new(_mover, DataParams.Character.JumpingForce);
-        _sneacker = new(_controller, _model);
-        _shooter = new(_aim, _waterJet, _ignoreLayers);
+        _audio = new(transform);
+        _health = new();
+        _physics = new(transform);
+        _physics.Init();
     }
 
-    protected virtual void OnEnable() =>
-        _eventAnimation.Stepped += OnStep;
+    protected virtual void OnEnable()
+    {
+        _physics.Subscribe();
+        _physics.DamageTaked += _health.TakeDamage;
+        _view.Stepped += OnStepped;
+        _health.ValueChanged += OnHealthChanged;
+        _health.Died += OnDied;
+    }
 
-    protected virtual void OnDisable() =>
-        _eventAnimation.Stepped -= OnStep;
+    protected virtual void OnDisable()
+    {
+        _physics.Unsubscribe();
+        _physics.DamageTaked -= _health.TakeDamage;
+        _view.Stepped -= OnStepped;
+        _health.ValueChanged -= OnHealthChanged;
+        _health.Died -= OnDied;
+    }
+
+    public virtual void Init(string name, TeamTypes team)
+    {
+        _name = name;
+        _team = team;
+    }
+
+    public virtual void SetListCharacters(List<Character> characters)
+    {
+        if (_centerModel == false)
+            _centerModel = GetComponentInChildren<CenterModel>(true).transform;
+    }
+
+    public void IncreaseCountKill() =>
+        _countKill++;
+
+    public void DecreaseCountKill() =>
+        _countKill--;
+
+    public void IncreaseCountDeath() =>
+        _countDeath++;
+
+    public void Kill() =>
+        _health.Kill();
+
+    public virtual void Resurrect()
+    {
+        _health.SetMaximumValue();
+        _isDeath = false;
+        _physics.Enable();
+        _view.EnableAnimator();
+        _physics.ResetKiller();
+    }
+
+    protected virtual void OnDied()
+    {
+        if (_isDeath)
+            return;
+
+        _isDeath = true;
+        _view.DisableAnimator();
+        _physics.Disable();
+        _countDeath++;
+
+        Died?.Invoke(this);
+    }
 
     protected void Move(Vector2 direction)
     {
-        if (_sneacker.IsSneacking && _controller.isGrounded)
-            direction *= DataParams.Character.SneakingStepMultiplierSpeed;
-        else if (_isSlowingStep)
-            direction *= DataParams.Character.SlowingStepMultiplierSpeed;
-
-        _mover.Move(direction);
-
-        _currentSpeed = Mathf.Abs(direction.x) + Mathf.Abs(direction.y);
-
-        Vector2 movementAnimation = _deltaCalculator.GetNormalizedDelta();
-        _characterAnimatorWrapper.UpdateMovement(movementAnimation);
+        _physics.Move(direction);
+        _view.UpdateMovementAnimation(_physics.DeltaDistance);
     }
 
-    protected void Jump()
-    {
-        if (_controller.isGrounded)
-            _jumper.Jump();
-    }
+    protected void Jump() =>
+        _physics.Jump();
 
     protected void Sneack()
     {
-        _sneacker.Sneack();
-        SwitchSneackingAnimation();
+        _physics.Sneack();
+        _view.PlaySneacking();
     }
 
     protected void Rise()
     {
-        _sneacker.Rise();
-        SwitchSneackingAnimation();
+        _physics.Rise();
+        _view.PlayRising();
     }
-
-    private void SwitchSneackingAnimation() =>
-        _characterAnimatorWrapper.SwitchSneacking(_sneacker.IsSneacking);
 
     protected void SetSlowingStep() =>
-        _isSlowingStep = true;
+        _physics.SetSlowingStep();
 
-    protected void SetRunningStep() =>
-        _isSlowingStep = false;
+    protected void SetNormalStep() =>
+        _physics.SetNormalStep();
 
-    private void OnStep()
+    private void OnStepped()
     {
-        if (_currentSpeed > 0.9f)
-            _audioSource.PlayOneShot(_audioClip);
+        if (_physics.CurrentSpeed >= 1f)
+            _audio.PlayStep();
     }
 
-    protected void StartShooting()
-    {
-        _shooter.Start();
-    }
-
-    protected void StopShooting()
-    {
-        _shooter.Stop();
-    }
+    private void OnHealthChanged(float value) =>
+        HealthChanged?.Invoke(this, value);
 }

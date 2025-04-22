@@ -4,7 +4,7 @@ using UnityEngine;
 public class BotFreeMovement
 {
     private readonly Rutine _rutine;
-    private readonly ObstacleDetector _detector;
+    private readonly ObstacleDetector _obstacleDetector;
     private readonly Vector2 _timeLimits = new(0.5f, 5f);
 
     private readonly Vector2[] _inputs =
@@ -29,20 +29,26 @@ public class BotFreeMovement
     public BotFreeMovement(MonoBehaviour mono)
     {
         _rutine = new(mono, Update);
-        _detector = new(mono.transform);
+        _obstacleDetector = new(mono.transform);
         SetNewParams();
 
         _rutine.Start();
-        _detector.JumpOpened += OnJumpOpened;
+        _obstacleDetector.JumpOpened += OnJumpOpened;
     }
 
     public Vector2 Input => _currentDirection;
+
+    public void Stop() =>
+        _rutine.Stop();
+
+    public void Start() =>
+        _rutine.Start();
 
     private void SetNewParams()
     {
         _checkedDirection = _inputs[UnityEngine.Random.Range(0, _inputs.Length)];
 
-        if (_detector.IsCanMovement(_checkedDirection))
+        if (_obstacleDetector.IsCanMovement(_checkedDirection))
         {
             _elapsedTime = 0;
             _duration = UnityEngine.Random.Range(_timeLimits.x, _timeLimits.y);
@@ -57,7 +63,7 @@ public class BotFreeMovement
 
     private void Update()
     {
-        if (_detector.IsCanMovement(_checkedDirection) == false)
+        if (_obstacleDetector.IsCanMovement(_checkedDirection) == false)
             SetNewParams();
         else
             _currentDirection = _checkedDirection;

@@ -1,14 +1,12 @@
 public class Jumper
 {
-    private readonly Mover _mover;    
-    private readonly float _jumpForce;
+    private readonly Mover _mover;
 
-    public Jumper(Mover mover, float jumpForce)
+    public Jumper(Mover mover)
     {
         _mover = mover;
-        _jumpForce = jumpForce;
     }
 
     public void Jump() =>
-        _mover.SetVerticalVelocity(_jumpForce);
+        _mover.SetVerticalVelocity(DataParams.Character.JumpingForce);
 }

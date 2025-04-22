@@ -6,10 +6,10 @@ public class Mover
     private readonly Gravity _gravity;
     private readonly float _speed;
 
-    public Mover(CharacterController characterController)
+    public Mover(Transform transform)
     {
-        _characterController = characterController;
-        _gravity = new(characterController);
+        _characterController = transform.GetComponent<CharacterController>();
+        _gravity = new(_characterController);
         _speed = DataParams.Character.MovementSpeed;
     }
 

@@ -24,7 +24,7 @@ public class Spray : MonoBehaviour, IDeactivatable<Spray>
     private void OnEnable() =>
         StartCoroutine(DeactivateOverTime());
 
-    public void Deactivate() =>
+    public void ReturnInPool() =>
         Deactivated?.Invoke(this);
 
     private IEnumerator DeactivateOverTime()
@@ -34,6 +34,6 @@ public class Spray : MonoBehaviour, IDeactivatable<Spray>
         while (_spray.isPlaying)
             yield return null;
 
-        Deactivate();
+        ReturnInPool();
     }
 }

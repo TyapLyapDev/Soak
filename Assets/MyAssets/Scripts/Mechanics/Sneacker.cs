@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Sneacker
 {
-    private const float SneackingMultiplier = 0.5f;
     private const float ControllerResizeSpeed = 4f;
     private const float ModelRepositionSpeed = 4f;
 
@@ -21,14 +20,14 @@ public class Sneacker
 
     public bool IsSneacking => _iSneacking;
 
-    public Sneacker(CharacterController controller, CharacterModel model)
+    public Sneacker(Transform transform)
     {
-        _rutine = new(controller.GetComponent<MonoBehaviour>(), UpdateSize);
-        _controller = controller;
-        _model = model.transform;
+        _rutine = new(transform.GetComponent<MonoBehaviour>(), UpdateSize);
+        _controller = transform.GetComponent<CharacterController>();
+        _model = transform.GetComponentInChildren<CharacterView>().transform;
 
         _valueRisingController = _controller.height;
-        _valueSneackingController = _valueRisingController * SneackingMultiplier;
+        _valueSneackingController = _valueRisingController * DataParams.Character.SneackingHeightMultiplier;
         _risingPositionModel = 0;
         _sneackingPositionModel = _risingPositionModel + _valueSneackingController * 0.5f;
     }

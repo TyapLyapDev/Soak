@@ -1,20 +1,28 @@
 using UnityEngine;
 
-public class CharacterAnimatorWrapper
+[RequireComponent(typeof(Animator))]
+public class CharacterAnimatorWrapper : MonoBehaviour
 {
-    private readonly Animator _animator;
+    private Animator _animator;
 
-    public CharacterAnimatorWrapper(Animator animator)
-    {
-        _animator = animator;
-    }
+    private void Awake() =>
+        _animator = GetComponent<Animator>();
 
-    public void SwitchSneacking(bool isOn) =>
-        _animator.SetBool(DataParams.Animator.IsSneaking, isOn);
+    public void PlaySneacking() =>
+        _animator.SetBool(DataParams.Animator.IsSneaking, true);
+
+    public void PlayRising() =>
+        _animator.SetBool(DataParams.Animator.IsSneaking, false);
 
     public void UpdateMovement(Vector2 movementDirection)
     {
         _animator.SetFloat(DataParams.Animator.RightMoving, movementDirection.x);
         _animator.SetFloat(DataParams.Animator.ForwardMoving, movementDirection.y);
     }
+
+    public void EnableAnimator() =>
+        _animator.enabled = true;
+
+    public void DisableAnimator() =>
+        _animator.enabled = false;
 }
