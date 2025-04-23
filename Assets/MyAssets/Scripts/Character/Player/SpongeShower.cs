@@ -22,9 +22,9 @@ public class SpongeShower : MonoBehaviour
         _player.Died -= OnDied;
     }
 
-    private void OnHealthChanged(Character _, float value)
+    private void OnHealthChanged(Character character)
     {
-        float normalizedHealth = value / MaximumHealth;
+        float normalizedHealth = character.Health / MaximumHealth;
         float alpha = Mathf.Lerp(TransparentMinValue, TransparentMaxValue, normalizedHealth);
 
         Color color = _image.color;

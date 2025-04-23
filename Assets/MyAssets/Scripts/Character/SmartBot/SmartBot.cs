@@ -140,6 +140,7 @@ public class SmartBot : Character
         if (IsDeath)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
+        _targetSwitcher.SetTarget(null);
         _botRotator.RotateWithoutEnemy();
     }
 

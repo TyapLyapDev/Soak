@@ -15,19 +15,23 @@ public abstract class Character : MonoBehaviour
     private HashSet<Collider> _colliders;
     private WaterJet _jet;
 
-    private TeamTypes _team;
+    private TeamType _team;
     private string _name;
     private int _countKill;
     private int _countDeath;
 
     private bool _isDeath;
 
-    public event Action<Character, float> HealthChanged;
+    public event Action<Character> NameChanged;
+    public event Action<Character> TeamChanged;
+    public event Action<Character> HealthChanged;
     public event Action<Character> Died;
+    public event Action<Character> Revived;
+    public event Action<Character> CountKillChanged;
 
     public string Name => _name;
 
-    public TeamTypes Team => _team;
+    public TeamType Team => _team;
 
     public int CountKill => _countKill;
 
@@ -77,10 +81,16 @@ public abstract class Character : MonoBehaviour
         _health.Died -= OnDied;
     }
 
-    public virtual void Init(string name, TeamTypes team)
+    public void SetName(string name)
     {
         _name = name;
+        NameChanged?.Invoke(this);
+    }
+
+    public void SetTeam(TeamType team)
+    {
         _team = team;
+        TeamChanged?.Invoke(this);
     }
 
     public virtual void SetListCharacters(List<Character> characters)
@@ -89,17 +99,23 @@ public abstract class Character : MonoBehaviour
             _centerModel = GetComponentInChildren<CenterModel>(true).transform;
     }
 
-    public void IncreaseCountKill() =>
+    public void IncreaseCountKill()
+    { 
         _countKill++;
+        CountKillChanged?.Invoke(this);
+    }
 
-    public void DecreaseCountKill() =>
+    public void DecreaseCountKill()
+    {
         _countKill--;
+        CountKillChanged?.Invoke(this);
+    }
 
-    public void IncreaseCountDeath() =>
-        _countDeath++;
-
-    public void Kill() =>
+    public void Kill()
+    {
+        _physics.ResetKiller();
         _health.Kill();
+    }
 
     public virtual void Resurrect()
     {
@@ -108,6 +124,8 @@ public abstract class Character : MonoBehaviour
         _physics.Enable();
         _view.EnableAnimator();
         _physics.ResetKiller();
+
+        Revived?.Invoke(this);
     }
 
     protected virtual void OnDied()
@@ -157,5 +175,5 @@ public abstract class Character : MonoBehaviour
     }
 
     private void OnHealthChanged(float value) =>
-        HealthChanged?.Invoke(this, value);
+        HealthChanged?.Invoke(this);
 }

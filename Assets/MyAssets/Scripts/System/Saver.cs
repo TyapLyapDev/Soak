@@ -1,7 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Saver : MonoBehaviour
 {
+    [SerializeField] private InputFieldView _playerName;
+    [SerializeField] private InputFieldView _countBot;
+    [SerializeField] private Toggle _gravigravitationalAnomalies;
+    [SerializeField] private Toggle _spatialAnomalies;
     [SerializeField] private SliderHorizontalRotationSensitivity _sliderHorizontalRotationSensitivity;
     [SerializeField] private SliderVerticalRotationSensitivity _sliderVerticalRotationSensitivity;
     [SerializeField] private SliderVolumeGame _sliderVolumeGame;
@@ -12,11 +18,21 @@ public class Saver : MonoBehaviour
     [SerializeField] private SliderAimColorGreen _sliderAimColorGreen;
     [SerializeField] private SliderAimColorBlue _sliderAimColorBlue;
 
+    public event Action SavesChanged;
+
+    public string PlayerName => PlayerPrefs.GetString(DataParams.SaveOptions.PlayerName, DataParams.Texts.PlayerName);
+
+    public int CountBot => int.Parse(PlayerPrefs.GetString(DataParams.SaveOptions.CountBot, DataParams.Texts.CountBot));
+
     private void Start() =>
         Load();
 
     public void Save()
     {
+        PlayerPrefs.SetString(DataParams.SaveOptions.PlayerName, _playerName.Text);
+        PlayerPrefs.SetString(DataParams.SaveOptions.CountBot, _countBot.Text);
+        PlayerPrefs.SetInt(DataParams.SaveOptions.GravigravitationalAnomalies, Convert.ToInt32(_gravigravitationalAnomalies.isOn));
+        PlayerPrefs.SetInt(DataParams.SaveOptions.SpatialAnomalies, Convert.ToInt32(_spatialAnomalies.isOn));
         PlayerPrefs.SetFloat(DataParams.SaveOptions.HorizontalRotation, _sliderHorizontalRotationSensitivity.Value);
         PlayerPrefs.SetFloat(DataParams.SaveOptions.VerticalRotation, _sliderVerticalRotationSensitivity.Value);
         PlayerPrefs.SetFloat(DataParams.SaveOptions.VolumeGame, _sliderVolumeGame.Value);
@@ -28,10 +44,16 @@ public class Saver : MonoBehaviour
         PlayerPrefs.SetFloat(DataParams.SaveOptions.AimColorB, _sliderAimColorBlue.Value);
 
         PlayerPrefs.Save();
+
+        SavesChanged?.Invoke();
     }
 
     public void Load()
     {
+        _playerName.SetText(PlayerPrefs.GetString(DataParams.SaveOptions.PlayerName, DataParams.Texts.PlayerName));
+        _countBot.SetText(PlayerPrefs.GetString(DataParams.SaveOptions.CountBot, DataParams.Texts.CountBot));
+        _gravigravitationalAnomalies.isOn = PlayerPrefs.GetInt(DataParams.SaveOptions.GravigravitationalAnomalies, DataParams.Texts.GravigravitationalAnomalies) != 0;
+        _spatialAnomalies.isOn = PlayerPrefs.GetInt(DataParams.SaveOptions.SpatialAnomalies, DataParams.Texts.SpatialAnomalies) != 0;
         _sliderHorizontalRotationSensitivity.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.HorizontalRotation, DataParams.SaveOptions.ValueHorizontalRotation));
         _sliderVerticalRotationSensitivity.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.VerticalRotation, DataParams.SaveOptions.ValueVerticalRotation));
         _sliderVolumeGame.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.VolumeGame, DataParams.SaveOptions.ValueVolumeGame));

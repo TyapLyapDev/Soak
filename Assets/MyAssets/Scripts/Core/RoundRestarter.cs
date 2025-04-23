@@ -10,12 +10,14 @@ public class RoundRestarter
     private readonly MonoBehaviour _mono;
     private readonly CharacterPositionAssigner _positionAssigner;
     private readonly WaitForSeconds _waitInSeconds;
-    private readonly List<Character> _characters;
+    private readonly IReadOnlyList<Character> _characters;
     private Coroutine _coroutine;
+
+    private bool _isRoundFinished;
 
     public event Action Restarted;
 
-    public RoundRestarter(MonoBehaviour mono, CharacterPositionAssigner positionAssigner, List<Character> characters)
+    public RoundRestarter(MonoBehaviour mono, CharacterPositionAssigner positionAssigner, IReadOnlyList<Character> characters)
     {
         _mono = mono;
         _positionAssigner = positionAssigner;
@@ -23,8 +25,12 @@ public class RoundRestarter
         _waitInSeconds = new WaitForSeconds(DelayBeforeRestartAfterRoundEnds);
     }
 
+    public bool IsRoundFinished => _isRoundFinished;
+
     public void Restart()
     {
+        _isRoundFinished = true;
+
         if (_coroutine != null)
             _mono.StopCoroutine(_coroutine);
 
@@ -47,6 +53,8 @@ public class RoundRestarter
             character.Resurrect();
             _positionAssigner.SetPosition(character);
         }
+
+        _isRoundFinished = false;
 
         Restarted?.Invoke();
     }

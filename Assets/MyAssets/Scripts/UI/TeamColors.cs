@@ -19,12 +19,12 @@ public class TeamColors : MonoBehaviour
         Instance = this;
     }
 
-    public Color Get(TeamTypes team)
+    public Color Get(TeamType team)
     {
         return team switch
         {
-            TeamTypes.CounterTerrorist => _counterTerrorists,
-            TeamTypes.Terrorist => _terrorists,
+            TeamType.CounterTerrorist => _counterTerrorists,
+            TeamType.Terrorist => _terrorists,
             _ => _none,
         };
     }

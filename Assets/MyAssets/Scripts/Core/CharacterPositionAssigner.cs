@@ -40,8 +40,8 @@ public class CharacterPositionAssigner
 
         List<SpawnPoint> pointsToUse = character.Team switch
         {
-            TeamTypes.CounterTerrorist => _remainingAvailableCounterTerroristPoints,
-            TeamTypes.Terrorist => _remainingAvailableTerroristPoints,
+            TeamType.CounterTerrorist => _remainingAvailableCounterTerroristPoints,
+            TeamType.Terrorist => _remainingAvailableTerroristPoints,
             _ => _remainingAvailablePoints,
         };
 

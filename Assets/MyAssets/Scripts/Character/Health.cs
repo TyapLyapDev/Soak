@@ -26,12 +26,16 @@ public class Health
     {
         _currentValue = 0;
         Died?.Invoke();
+        ValueChanged?.Invoke(_currentValue);
     }
 
     public void TakeDamage(float damage)
     {
         if (damage < 0)
             throw new Exception("Значение урона должно быть положительным");
+
+        if (_currentValue == 0)
+            return;
 
         _currentValue -= damage;
 
@@ -40,7 +44,7 @@ public class Health
 
         if (_currentValue == 0)
             Died?.Invoke();
-        else
-            ValueChanged?.Invoke(_currentValue);
+
+        ValueChanged?.Invoke(_currentValue);
     }
 }

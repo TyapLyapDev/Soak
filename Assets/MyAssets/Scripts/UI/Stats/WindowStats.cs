@@ -1,117 +1,112 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class WindowStats : MonoBehaviour
 {
     [SerializeField] private CharacterManager _manager;
-    [SerializeField] private TeamView _teamViewPrefab;
-    [SerializeField] private StatsLineView _statsLineViewPrefab;
-    [SerializeField] private GameObject _content;
+    [SerializeField] private TeamStats _teamViewPrefab;
+    [SerializeField] private Transform _content;
 
-    private readonly Dictionary<string, StatsLineView> _statsLineViews = new();
-    private readonly Dictionary<string, TeamView> _teamViews = new();
+    private readonly Dictionary<TeamType, TeamStats> _teamViews = new();
 
-    private void ClearContent()
+    private void Awake()
     {
-        foreach (Transform child in _content.transform)
+        foreach (Transform child in _content)
             Destroy(child.gameObject);
+    }
 
-        _statsLineViews.Clear();
+    private void Start()
+    {
+        if (_manager.Characters == null)
+            throw new ArgumentNullException("Список игроков не был инициализирован");
+
+        InitializeTeams();
+        _manager.CharacterAdded += AddCharacterToTeam;
+        _manager.CharacterRemoved += RemoveCharacterFromTeam;
+        _manager.TeamWinChanged += UpdateTeamWinCount;
+        _manager.Died += UpdateSorting;
+        _manager.Killed += UpdateSorting;
+    }
+
+    private void OnDestroy()
+    {
+        _manager.CharacterAdded -= AddCharacterToTeam;
+        _manager.CharacterRemoved -= RemoveCharacterFromTeam;
+        _manager.TeamWinChanged -= UpdateTeamWinCount;
+        _manager.Died -= UpdateSorting;
+        _manager.Killed -= UpdateSorting;
+        ClearTeams();
+    }
+
+    private void InitializeTeams()
+    {
+        ClearTeams();
+
+        foreach (var character in _manager.Characters)
+            AddCharacterToTeam(character);
+    }
+
+    private void AddCharacterToTeam(Character character)
+    {
+        var teamType = character.Team;
+
+        if (_teamViews.TryGetValue(teamType, out TeamStats teamView) == false)
+        {
+            teamView = CreateTeamStats(teamType);
+            _teamViews[teamType] = teamView;
+        }
+
+        teamView.AddCharacter(character);
+    }
+
+    private void RemoveCharacterFromTeam(Character character)
+    {
+        if (_teamViews.TryGetValue(character.Team, out TeamStats teamStats) == false)
+            return;
+
+        teamStats.RemoveCharacter(character);
+
+        if (teamStats.CountCharacters == 0)
+            DestroyTeamStats(character.Team);
+    }
+
+    private TeamStats CreateTeamStats(TeamType teamType)
+    {
+        var teamStats = Instantiate(_teamViewPrefab, _content);
+        teamStats.Initialize(teamType, _manager.GetWinCount(teamType));
+
+        return teamStats;
+    }
+
+    private void DestroyTeamStats(TeamType teamType)
+    {
+        if (_teamViews.TryGetValue(teamType, out var teamView) == false)
+            return;
+
+        Destroy(teamView.gameObject);
+        _teamViews.Remove(teamType);
+    }
+
+    private void UpdateTeamWinCount(TeamType team, int count)
+    {
+        if (_teamViews.TryGetValue(team, out var teamView))
+            teamView.UpdateWinCount(count);
+    }
+
+    private void ClearTeams()
+    {
+        foreach (var teamView in _teamViews.Values)
+            Destroy(teamView.gameObject);
+
         _teamViews.Clear();
     }
 
-    private void OnEnable()
+    private void UpdateSorting(Character character)
     {
-        HandleStats();
-        _manager.Changed += HandleStats;
-        _manager.HealthChanged += OnHealthChanged;
-        _manager.TeamWinChanged += HandleStats;
-    }
-
-    private void OnDisable()
-    {
-        _manager.Changed -= HandleStats;
-        _manager.HealthChanged -= OnHealthChanged;
-        _manager.TeamWinChanged -= HandleStats;
-    }
-
-    private void HandleStats()
-    {
-        ClearContent();
-
-        List<Character> characters = GetSortedCharacters();        
-
-        UpdateTeamStats(characters, _manager.TerroristTeamCountWin, TeamTypes.Terrorist, DataParams.Character.TeamTerroristsName);
-        UpdateTeamStats(characters, _manager.CounterTerroristTeamCountWin, TeamTypes.CounterTerrorist, DataParams.Character.TeamCounterTerroristName);
-        UpdateTeamStats(characters, -1, TeamTypes.None, DataParams.Character.TeamNoName);
-    }
-
-    private List<Character> GetSortedCharacters()
-    {
-        return _manager.Characters
-            .OrderByDescending(ch => ch.CountKill)
-            .ThenBy(ch => ch.CountDeath)
-            .ToList();
-    }
-
-    private void UpdateTeamStats(List<Character> characters, int teamCountWin, TeamTypes teamType, string teamName)
-    {
-        var teamCharacters = characters.Where(ch => ch.Team == teamType).ToList();
-
-        if (teamCharacters.Count == 0)
+        if (_teamViews.TryGetValue(character.Team, out TeamStats teamStats) == false)
             return;
 
-        Color color = TeamColors.Instance.Get(teamType);
-
-        UpdateTeamView(teamCharacters, teamCountWin, teamName, color);
-        UpdateCharacterStats(teamCharacters, color);
-    }
-
-    private void UpdateTeamView(List<Character> teamCharacters, int countWin, string teamName, Color color)
-    {
-        if (_teamViews.ContainsKey(teamName) == false)
-        {
-            TeamView team = Instantiate(_teamViewPrefab, _content.transform);
-            team.SetColor(color);
-            team.SetTeamName(teamName, teamCharacters.Count);
-            team.SetCountWin(countWin);
-            _teamViews[teamName] = team;
-
-            return;
-        }
-
-        _teamViews[teamName].SetTeamName(teamName, teamCharacters.Count);
-    }
-
-    private void UpdateCharacterStats(List<Character> teamCharacters, Color color)
-    {
-        foreach (Character character in teamCharacters)
-        {
-            if (!_statsLineViews.ContainsKey(character.Name))
-                CreateCharacterStatsLine(character, color);
-            else
-                UpdateExistingCharacterStats(character);
-        }
-    }
-
-    private void CreateCharacterStatsLine(Character character, Color color)
-    {
-        StatsLineView line = Instantiate(_statsLineViewPrefab, _content.transform);
-        line.SetColor(color);
-        line.SetStats(character.Name, character.IsDeath, character.Health, character.CountKill, character.CountDeath);
-        _statsLineViews[character.Name] = line;
-    }
-
-    private void UpdateExistingCharacterStats(Character character)
-    {
-        var line = _statsLineViews[character.Name];
-        line.SetStats(character.Name, character.IsDeath, character.Health, character.CountKill, character.CountDeath);
-    }
-
-    private void OnHealthChanged(Character character, float healthValue)
-    {
-        if (_statsLineViews.TryGetValue(character.Name, out StatsLineView line))
-            line.SetHealth(healthValue);
+        teamStats.UpdateSorting();
     }
 }

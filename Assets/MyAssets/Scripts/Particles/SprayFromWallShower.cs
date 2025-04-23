@@ -2,11 +2,13 @@
 
 public class SprayFromWallShower : MonoBehaviour
 {
+    [SerializeField] private CharacterManager _characterManager;
     [SerializeField] private Spray _sprayPrefab;
     [SerializeField] private Puddle _puddlePrefab;
 
     private Pool<Spray> _sprayPool;
     private Pool<Puddle> _puddlePool;
+    private CharacterRegistrator _registrator;
 
     private void Awake()
     {
@@ -14,11 +16,19 @@ public class SprayFromWallShower : MonoBehaviour
         _puddlePool = new(_puddlePrefab, transform);
     }
 
-    public void Subscribe(WaterJet jet) =>
-        jet.Collided += OnCollision;
+    private void Start()
+    {
+        _registrator = _characterManager.Registrator;
 
-    public void Unsubscribe(WaterJet jet) =>
-        jet.Collided -= OnCollision;
+        _registrator.Registered += OnCharacterRegistered;
+        _registrator.Deregistered += OnCharacterDeregistered;
+    }
+
+    private void OnCharacterRegistered(Character character) =>
+        character.Jet.Collided += OnCollision;
+    
+    private void OnCharacterDeregistered(Character character) =>
+        character.Jet.Collided -= OnCollision;
 
     private void OnCollision(Vector3 position, Quaternion rotation)
     {

@@ -8,10 +8,10 @@ public class BotTargetsFinder
     private readonly Vector2 HorizontalViewAngle = new(-60, 60);
 
     private readonly Transform _eyes;
-    private readonly TeamTypes _team;
+    private readonly TeamType _team;
     private readonly List<Character> _allCharacters;
 
-    public BotTargetsFinder(Transform eyes, TeamTypes team, List<Character> allCharacters)
+    public BotTargetsFinder(Transform eyes, TeamType team, List<Character> allCharacters)
     {
         _eyes = eyes;
         _team = team;
@@ -29,7 +29,7 @@ public class BotTargetsFinder
     {
         List<Character> onlyEnemy = new(characters);
 
-        if (_team == TeamTypes.Terrorist || _team == TeamTypes.CounterTerrorist)
+        if (_team == TeamType.Terrorist || _team == TeamType.CounterTerrorist)
             onlyEnemy = new(onlyEnemy.Where(ch => ch.Team != _team && !ch.IsDeath).ToList());
 
         return onlyEnemy;

@@ -26,10 +26,10 @@ public class WindowMurderDisplay : MonoBehaviour
         ClearContent();
 
     private void OnEnable() =>
-        _manager.Murdered += OnMurdered;
+        _manager.Died += OnMurdered;
 
     private void OnDisable() =>
-        _manager.Murdered -= OnMurdered;
+        _manager.Died -= OnMurdered;
 
     private void ClearContent()
     {
@@ -37,10 +37,12 @@ public class WindowMurderDisplay : MonoBehaviour
             Destroy(child.gameObject);
     }
 
-    private void OnMurdered(Character killer, Character sacrifice)
+    private void OnMurdered(Character sacrifice)
     {
         if (_pool.TryGet(out MurderLine line) == false)
             return;
+
+        Character killer = sacrifice.Killer;
 
         Color colorKiller;
         string nameKiller;
@@ -49,14 +51,14 @@ public class WindowMurderDisplay : MonoBehaviour
         if (killer == null)
         {
             sprite = _suicideSprite;            
-            colorKiller = Color.white;
             nameKiller = string.Empty;
+            colorKiller = Color.white;
         }
         else
         {
             sprite = _weaponSprite;
-            colorKiller = TeamColors.Instance.Get(killer.Team);
             nameKiller = killer.Name;
+            colorKiller = TeamColors.Instance.Get(killer.Team);
         }
 
         Color colorSacrifice = TeamColors.Instance.Get(sacrifice.Team);

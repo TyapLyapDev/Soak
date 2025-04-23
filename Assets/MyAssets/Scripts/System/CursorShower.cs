@@ -3,6 +3,7 @@ using UnityEngine;
 public class CursorShower : MonoBehaviour
 {
     [SerializeField] private MenuShower _menuShower;
+    [SerializeField] private PanelTeamSelectionPlayer _panelTeamSelectionPlayer;
 
     private void OnEnable() =>
         _menuShower.ShowingStateChanged += OnShowingStateChanged;
@@ -21,7 +22,7 @@ public class CursorShower : MonoBehaviour
 
     private void OnShowingStateChanged(bool isShowing)
     {
-        if (isShowing)
+        if (isShowing || _panelTeamSelectionPlayer.gameObject.activeInHierarchy)
             ShowCursor();
         else
             HideCursor();

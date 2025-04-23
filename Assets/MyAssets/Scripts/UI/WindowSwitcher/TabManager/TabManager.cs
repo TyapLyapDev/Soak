@@ -19,8 +19,8 @@ public class TabManager
         _selectedSprite = selectedSprite;
         InitButtons();
 
-        _currentButton = typeof(ButtonTabRotation);
-        Select<ButtonTabRotation>();
+        _currentButton = typeof(ButtonTabPlayerName);
+        Select<ButtonTabPlayerName>();
     }
 
     public void Subscribe()
@@ -68,6 +68,10 @@ public class TabManager
 
         switch (button)
         {
+            case ButtonTabPlayerName:
+                ShowContainer<ContainerPlayerName>();
+                break;
+
             case ButtonTabRotation:
                 ShowContainer<ContainerRotation>();
                 break;
@@ -82,7 +86,7 @@ public class TabManager
 
             case ButtonTabAim:
                 ShowContainer<ContainerAim>();
-                break;
+                break;            
         }
     }
 

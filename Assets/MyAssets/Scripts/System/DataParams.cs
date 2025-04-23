@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public static class DataParams
 {
     public static class SceneNames
@@ -32,17 +30,53 @@ public static class DataParams
         public const float MovementSpeed = 7f;
         public const float JumpingForce = 4f;
         public const float Gravity = 10f;
-        public const float MaximumRayDistance = 100f;
+        public const float MaximumRayDistance = 100f;        
+    }
 
+    public static class SaveOptions
+    {
+        public const string PlayerName = nameof(PlayerName);
+        public const string CountBot = nameof(CountBot);
+        public const string GravigravitationalAnomalies = nameof(GravigravitationalAnomalies);
+        public const string SpatialAnomalies = nameof(SpatialAnomalies);
+        public const string HorizontalRotation = nameof(HorizontalRotation);
+        public const string VerticalRotation = nameof(VerticalRotation);
+        public const string VolumeGame = nameof(VolumeGame);
+        public const string VolumeMusic = nameof(VolumeMusic);
+        public const string Lighting = nameof(Lighting);
+        public const string AimColorR = nameof(AimColorR);
+        public const string AimColorG = nameof(AimColorG);
+        public const string AimColorB = nameof(AimColorB);
+        public const string AimScale = nameof(AimScale);
+
+        public const float ValueHorizontalRotation = 1.4f;
+        public const float ValueVerticalRotation = 1.4f;
+        public const float ValueVolumeGame = 45f;
+        public const float ValueVolumeMusic = 30f;
+        public const float ValueLighting = 40f;
+        public const float ValueAimColorR = 0f;
+        public const float ValueAimColorG = 1f;
+        public const float ValueAimColorB = 0f;
+        public const float ValueAimScale = 1f;
+    }
+
+    public static class Texts
+    {
+        public const string PlayerName = ">>-Стрелок-->";
+        public const string CountBot = "9";
+        public const int GravigravitationalAnomalies = 0;
+        public const int SpatialAnomalies = 0;
         public const string TeamNoName = "Без команды";
         public const string TeamTerroristsName = "Хулиганы";
-        public const string TeamCounterTerroristName = "Защитники";
+        public const string TeamCounterTerroristsName = "Защитники";
+        public const string TextTerroristsWin = "Хулиганы победили!";
+        public const string TextCounterTerroristsWin = "Защитники победили!";
 
         public const string HintFriendTeam = "Кореш : ";
         public const string HintEnemyTeam = "Вражина : ";
 
-        public static readonly string[] Names = 
-        { 
+        public static readonly string[] Names =
+        {
             "Скуфидон",
             "Душнидзе",
             "Дотоша",
@@ -99,28 +133,5 @@ public static class DataParams
             "Дупло_и_бал",
             "Чмонстр",
         };
-    }
-
-    public static class SaveOptions
-    {
-        public const string HorizontalRotation = nameof(HorizontalRotation);
-        public const string VerticalRotation = nameof(VerticalRotation);
-        public const string VolumeGame = nameof(VolumeGame);
-        public const string VolumeMusic = nameof(VolumeMusic);
-        public const string Lighting = nameof(Lighting);
-        public const string AimColorR = nameof(AimColorR);
-        public const string AimColorG = nameof(AimColorG);
-        public const string AimColorB = nameof(AimColorB);
-        public const string AimScale = nameof(AimScale);
-
-        public const float ValueHorizontalRotation = 1.4f;
-        public const float ValueVerticalRotation = 1.4f;
-        public const float ValueVolumeGame = 45f;
-        public const float ValueVolumeMusic = 30f;
-        public const float ValueLighting = 40f;
-        public const float ValueAimColorR = 0f;
-        public const float ValueAimColorG = 1f;
-        public const float ValueAimColorB = 0f;
-        public const float ValueAimScale = 1f;
     }
 }

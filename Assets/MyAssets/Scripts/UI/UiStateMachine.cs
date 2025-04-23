@@ -24,14 +24,20 @@ public class UiStateMachine : MonoBehaviour
         {
             { typeof(ButtonReturnToGame),           new Action[] { _windowSwitcher.ReturnToGame } },
             { typeof(ButtonDisconnectGame),         new Action[] { () => SceneManager.LoadScene(DataParams.SceneNames.Menu) } },
-            { typeof(ButtonStartNewGame),           new Action[] { () => SceneManager.LoadScene(DataParams.SceneNames.Game) } },
+            { typeof(ButtonStartNewGame),           new Action[] { _windowSwitcher.ShowPanel<PanelNewGame> } },
             { typeof(ButtonOpenPanelPreferences),   new Action[] { _windowSwitcher.ShowPanel<PanelPreferences> } },
             { typeof(ButtonOpenPanelExitGame),      new Action[] { _windowSwitcher.ShowPanel<PanelExitGame> } },
+
+            { typeof(ButtonPanelClosePanelNewGame), new Action[] { _windowSwitcher.HidePanel<PanelNewGame>, _windowSwitcher.LoadPreferences } },
+            { typeof(ButtonPanelStartGame),         new Action[] { _windowSwitcher.SavePreferences, () => SceneManager.LoadScene(DataParams.SceneNames.Game) } },
+            { typeof(ButtonPanelCancelNewGame),     new Action[] { _windowSwitcher.HidePanel<PanelNewGame>, _windowSwitcher.LoadPreferences } },
+
             { typeof(ButtonClosePanelPreferences),  new Action[] { _windowSwitcher.HidePanel<PanelPreferences>, _windowSwitcher.LoadPreferences } },
-            { typeof(ButtonCancelPreferences),      new Action[] { _windowSwitcher.HidePanel<PanelPreferences>, _windowSwitcher.LoadPreferences } },
             { typeof(ButtonOkPreferences),          new Action[] { _windowSwitcher.HidePanel<PanelPreferences>, _windowSwitcher.SavePreferences } },
-            { typeof(ButtonCancelExit),             new Action[] { _windowSwitcher.HidePanel<PanelExitGame> } },
+            { typeof(ButtonCancelPreferences),      new Action[] { _windowSwitcher.HidePanel<PanelPreferences>, _windowSwitcher.LoadPreferences } },
             { typeof(ButtonApplyPreferences),       new Action[] { _windowSwitcher.SavePreferences } },
+
+            { typeof(ButtonCancelExit),             new Action[] { _windowSwitcher.HidePanel<PanelExitGame> } },
             { typeof(ButtonExitConfirmation),       new Action[] { Application.Quit } }
         };
     }
