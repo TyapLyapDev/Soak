@@ -49,6 +49,7 @@ public class SmartBotRotator
 
     public void RotateWithoutEnemy()
     {
+        Start();
         _rotationTypeSwitcher.Start();
         _rotatorToTarget.SetOffset(new(0, 0, 0));
     }

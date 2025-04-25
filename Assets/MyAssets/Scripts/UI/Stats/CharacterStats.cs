@@ -17,6 +17,7 @@ public class CharacterStats : MonoBehaviour
     public void Initialize(Character character)
     {
         _character = character;
+        _view.Init(character);
         SubscribeToEvents();
         UpdateAllStats();
     }
@@ -66,7 +67,7 @@ public class CharacterStats : MonoBehaviour
     }
 
     private void SetDeathStatus(Character character) =>
-        _view.SetDeathStatus(character.IsDeath);
+        _view.SetDeathStatus(character.IsDead);
 
     private void UpdateHealth(Character character) =>
         _view.UpdateHealth(character.Health);

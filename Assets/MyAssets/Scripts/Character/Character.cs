@@ -15,6 +15,7 @@ public abstract class Character : MonoBehaviour
     private HashSet<Collider> _colliders;
     private WaterJet _jet;
 
+    private CharacterController _controller;
     private TeamType _team;
     private string _name;
     private int _countKill;
@@ -39,7 +40,7 @@ public abstract class Character : MonoBehaviour
 
     public float Health => _health.Value;
 
-    public bool IsDeath => _isDeath;
+    public bool IsDead => _isDeath;
 
     public Character Killer => _physics.Killer;
 
@@ -49,8 +50,11 @@ public abstract class Character : MonoBehaviour
 
     public HashSet<Collider> Colliders => _colliders;
 
+    public CharacterController Controller => _controller;
+
     protected virtual void Awake()
     {
+        _controller = GetComponent<CharacterController>();
         _initializer = new(this);
         _centerModel = _initializer.GetCenterModel();      
         _view = _initializer.GetView();
@@ -93,10 +97,12 @@ public abstract class Character : MonoBehaviour
         TeamChanged?.Invoke(this);
     }
 
-    public virtual void SetListCharacters(List<Character> characters)
+    public virtual void Init(List<Character> characters)
     {
         if (_centerModel == false)
             _centerModel = GetComponentInChildren<CenterModel>(true).transform;
+
+        _audio.PlayAdded();
     }
 
     public void IncreaseCountKill()
@@ -136,6 +142,7 @@ public abstract class Character : MonoBehaviour
         _isDeath = true;
         _view.DisableAnimator();
         _physics.Disable();
+        _audio.PlayDead();
         _countDeath++;
 
         Died?.Invoke(this);
@@ -167,6 +174,12 @@ public abstract class Character : MonoBehaviour
 
     protected void SetNormalStep() =>
         _physics.SetNormalStep();
+
+    protected void StartPlayWaterJet() =>
+        _audio.StartPlayWaterJet();
+
+    protected void StopPlayWaterJet() =>
+        _audio.StopPlayWaterJet();
 
     private void OnStepped()
     {

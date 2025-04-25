@@ -9,7 +9,7 @@ public class WaterKillerPond : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Body body))
+        if (other.TryGetComponent(out Body body) && body.Character.IsDead != true)
             body.Character.Kill();
 
         if(other.TryGetComponent(out Rigidbody rigidbody))
@@ -34,7 +34,7 @@ public class WaterKillerPond : MonoBehaviour
 
         while (isUnderwater)
         {
-            if (rigidbody.position.y < _waterHeight)
+            if (rigidbody.position.y < _waterHeight && rigidbody != null)
             {
                 float depth = _waterHeight - rigidbody.position.y;
                 Vector3 buoyancy = _buoyancyForce * depth * Vector3.up;
@@ -45,9 +45,13 @@ public class WaterKillerPond : MonoBehaviour
                 isUnderwater = false;
             }
 
+            if (rigidbody == null) 
+                yield break;
+
             yield return null;
         }
 
-        rigidbody.useGravity = true;
+        if (rigidbody != null)
+            rigidbody.useGravity = true;
     }
 }

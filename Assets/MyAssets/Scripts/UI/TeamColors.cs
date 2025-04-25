@@ -4,9 +4,10 @@ public class TeamColors : MonoBehaviour
 {
     public static TeamColors Instance { get; private set; }
 
-    [SerializeField] private Color _none;
+    [SerializeField] private Color _againstEveryone;
     [SerializeField] private Color _counterTerrorists;
     [SerializeField] private Color _terrorists;
+    [SerializeField] private Color _observers;
 
     private void Awake()
     {
@@ -25,7 +26,9 @@ public class TeamColors : MonoBehaviour
         {
             TeamType.CounterTerrorist => _counterTerrorists,
             TeamType.Terrorist => _terrorists,
-            _ => _none,
+            TeamType.Observer => _observers,
+            TeamType.AgainstEveryone => _againstEveryone,
+            _ => Color.magenta,
         };
     }
 }

@@ -12,23 +12,40 @@ public class ButtonTeamSelection : MonoBehaviour, IPointerEnterHandler, IPointer
 
     private Sprite _initialSprite;
 
-    public event Action<ButtonTeamSelection> Clicked;
+    public event Action Clicked;
+    public event Action Entered;
+    public event Action Exited;
 
     private void Awake() =>
         _initialSprite = _image.sprite;
 
-    public void OnPointerEnter(PointerEventData eventData) =>
+    private void OnEnable() =>
+        _image.sprite = _initialSprite;
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
         _image.sprite = _selectionSprite;
+        Entered?.Invoke();
+    }
 
-    public void OnPointerExit(PointerEventData eventData) =>
+    public void OnPointerExit(PointerEventData eventData)
+    {
         _image.sprite = _initialSprite;
+        Exited?.Invoke();
+    }
 
-    public void OnPointerDown(PointerEventData eventData) =>
+    public void OnPointerDown(PointerEventData eventData)
+    {
         _image.sprite = _initialSprite;
+        Entered?.Invoke();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Clicked?.Invoke();
+        Exited?.Invoke();
+    }
 
     public void SetText(string text) =>
         _text.text = text;
-
-    public void OnPointerClick(PointerEventData eventData) =>
-        Clicked?.Invoke(this);
 }

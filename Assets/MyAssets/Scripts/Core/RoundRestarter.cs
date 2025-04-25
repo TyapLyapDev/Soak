@@ -50,6 +50,9 @@ public class RoundRestarter
 
         foreach (Character character in _characters)
         {
+            if(character.Team == TeamType.Observer) 
+                continue;
+
             character.Resurrect();
             _positionAssigner.SetPosition(character);
         }

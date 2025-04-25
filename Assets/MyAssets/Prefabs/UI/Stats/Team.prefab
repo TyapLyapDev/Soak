@@ -230,6 +230,7 @@ MonoBehaviour:
   _view: {fileID: 6141882545573876616}
   _statsPrefab: {fileID: 4351907074615545382, guid: 64859f88b1d1ced4989df3b5845743d4, type: 3}
   _content: {fileID: 5058944669028286189}
+  _contentRect: {fileID: 5058944669028286189}
 --- !u!114 &6141882545573876616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_VerticalFit: 1
 --- !u!1 &7009550773244611164
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_VerticalFit: 1
 --- !u!1 &8008669711843803740
 GameObject:
   m_ObjectHideFlags: 0

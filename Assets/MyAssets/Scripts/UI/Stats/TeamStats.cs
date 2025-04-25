@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TeamStats : MonoBehaviour
 {
@@ -9,59 +10,91 @@ public class TeamStats : MonoBehaviour
     [SerializeField] private Transform _content;
 
     private TeamType _teamType;
-    private readonly Dictionary<Character, CharacterStats> _characterViews = new();
+    private ContentSizeFitter _sizeFitter;
+    private readonly Dictionary<Character, CharacterStats> _charactersStats = new();
+    private List<CharacterStats> _lastSorted = new();
 
-    public int CountCharacters => _characterViews.Count;
+    public int CountCharacters => _charactersStats.Count;
 
     private void Awake()
     {
         foreach (Transform child in _content)
             Destroy(child.gameObject);
+
+        _sizeFitter = _content.GetComponent<ContentSizeFitter>();
     }
 
     public void Initialize(TeamType teamType, int winCount)
     {
         _teamType = teamType;
-        UpdateWinCount(winCount);
-        UpdateTeamName();
+
         _view.UpdateColor(teamType);
+        UpdateTeamHeader();
+        UpdateWinCount(winCount);
     }
 
     public void AddCharacter(Character character)
     {
-        if (_characterViews.ContainsKey(character)) return;
+        if (_charactersStats.ContainsKey(character)) 
+            return;
 
-        var view = Instantiate(_statsPrefab, _content);
-        view.Initialize(character);
-        _characterViews.Add(character, view);
+        CharacterStats characterStats = Instantiate(_statsPrefab, _content);
+        characterStats.Initialize(character);
+        _charactersStats.Add(character, characterStats);
+
+        UpdateTeamHeader();
         UpdateSorting();
-        UpdateTeamName();
     }
 
     public void RemoveCharacter(Character character)
     {
-        if (_characterViews.TryGetValue(character, out var view) == false)
+        if (_charactersStats.TryGetValue(character, out var view) == false)
             return;
 
         Destroy(view.gameObject);
-        _characterViews.Remove(character);
-        UpdateTeamName();
+        _charactersStats.Remove(character);
+
+        UpdateTeamHeader();
+        UpdateSorting();
     }
 
-    public void UpdateWinCount(int count) =>
-        _view.UpdateWinCount(count);
+    public void UpdateWinCount(int count)
+    {
+        if(_teamType == TeamType.Observer)
+            _view.UpdateWinCount(-1);
+        else
+            _view.UpdateWinCount(count);
+    }        
 
     public void UpdateSorting()
     {
-        var sorted = _characterViews.Values
+        if (SortCharacters()) 
+            UpdateLayout();
+    }
+
+    private void UpdateTeamHeader() =>
+        _view.UpdateTeamHeader(_teamType, _charactersStats.Count);
+
+    private bool SortCharacters()
+    {
+        var sorted = _charactersStats.Values
             .OrderByDescending(v => v.Character.CountKill)
             .ThenBy(v => v.Character.CountDeath)
             .ToList();
 
+        if (sorted.SequenceEqual(_lastSorted)) return false;
+
         for (int i = 0; i < sorted.Count; i++)
             sorted[i].transform.SetSiblingIndex(i);
+
+        _lastSorted = sorted;
+
+        return true;
     }
 
-    private void UpdateTeamName() =>
-        _view.UpdateTeamName(_teamType, _characterViews.Count);    
+    private void UpdateLayout()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)_content);
+        _sizeFitter.SetLayoutVertical();
+    }
 }

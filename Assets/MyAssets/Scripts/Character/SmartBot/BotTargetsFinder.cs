@@ -30,7 +30,7 @@ public class BotTargetsFinder
         List<Character> onlyEnemy = new(characters);
 
         if (_team == TeamType.Terrorist || _team == TeamType.CounterTerrorist)
-            onlyEnemy = new(onlyEnemy.Where(ch => ch.Team != _team && !ch.IsDeath).ToList());
+            onlyEnemy = new(onlyEnemy.Where(ch => ch.Team != _team && !ch.IsDead).ToList());
 
         return onlyEnemy;
     }

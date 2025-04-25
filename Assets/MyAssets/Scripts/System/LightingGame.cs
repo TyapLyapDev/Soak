@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Light))]
@@ -19,7 +18,7 @@ public class LightingGame : MonoBehaviour
     {
         _minimumValueSlider = _sliderLighting.MinimumValue;
         _maximumValueSlider = _sliderLighting.MaximumValue;
-        OnChanged(_sliderLighting.Value);
+        OnChanged();
     }
 
     private void OnEnable() =>
@@ -28,9 +27,9 @@ public class LightingGame : MonoBehaviour
     private void OnDisable() =>
         _sliderLighting.ValueChanged -= OnChanged;
 
-    private void OnChanged(float value)
+    private void OnChanged()
     {
-        float normalizedValue = Mathf.InverseLerp(_minimumValueSlider, _maximumValueSlider, value) * MaximumIntensity;
+        float normalizedValue = Mathf.InverseLerp(_minimumValueSlider, _maximumValueSlider, _sliderLighting.Value) * MaximumIntensity;
         RenderSettings.ambientIntensity = normalizedValue;
         _directionalLight.intensity = normalizedValue * 0.5f;
     }

@@ -15,7 +15,7 @@ public class RagdollHandler
     {
         foreach (Rigidbody rigidbody in _bodies)
         {
-            rigidbody.useGravity = true;
+            rigidbody.useGravity = !DataParams.SaveOptions.IsGravigravitationalAnomaliesChecked;
             rigidbody.isKinematic = false;
         }
     }

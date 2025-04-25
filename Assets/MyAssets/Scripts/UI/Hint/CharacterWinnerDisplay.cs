@@ -18,17 +18,24 @@ public class CharacterWinnerDisplay : MonoBehaviour
     {
         OnRoundRestarted();
         _manager.TeamWinChanged += OnTeamWinChanged;
+        _manager.NoneTeamCharacterWinChanged += OnCharacterWin;
         _manager.RoundRestarted += OnRoundRestarted;
     }
 
     private void OnDisable()
     {
         _manager.TeamWinChanged -= OnTeamWinChanged;
+        _manager.NoneTeamCharacterWinChanged -= OnCharacterWin;
         _manager.RoundRestarted -= OnRoundRestarted;
     }
 
     private void OnTeamWinChanged(TeamType team, int _) =>
-        _text.text = team == TeamType.CounterTerrorist ? DataParams.Texts.TextCounterTerroristsWin : DataParams.Texts.TextTerroristsWin;
+        _text.text = team == TeamType.CounterTerrorist ?
+                            DataParams.Texts.TextCounterTerroristsWin :
+                            DataParams.Texts.TextTerroristsWin;
+
+    private void OnCharacterWin(Character character) =>
+        _text.text = string.Format(DataParams.Texts.TextCharacterWin, character.Name);
 
     private void OnRoundRestarted() =>
         _text.text = string.Empty;

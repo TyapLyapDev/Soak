@@ -10,15 +10,14 @@ public enum ShooterType
 
 public enum TeamType
 {
-    None,
+    AgainstEveryone,
+    Observer,
     Terrorist,
     CounterTerrorist,
 }
 
 public class CharacterManager : MonoBehaviour
 {
-    private const TeamType PlayerTeam = TeamType.CounterTerrorist;
-
     [SerializeField] private Saver _saver;
     [SerializeField] private InputInformer _informer;
     [SerializeField] private SoundEffectPlayer2D _soundPlayer;
@@ -34,10 +33,12 @@ public class CharacterManager : MonoBehaviour
 
     private int _ctCountWin;
     private int _terCountWin;
+    private int _aeCountWin;
 
     public event Action<Character> CharacterAdded;
     public event Action<Character> CharacterRemoved;
     public event Action<TeamType, int> TeamWinChanged;
+    public event Action<Character> NoneTeamCharacterWinChanged;
     public event Action<Character> Died;
     public event Action<Character> Killed;
     public event Action RoundRestarted;
@@ -51,13 +52,7 @@ public class CharacterManager : MonoBehaviour
         _registrator = new(OnDied);
         _positionAssigner = new(_folder.transform);
         _roundRestarter = new(this, _positionAssigner, _registrator.Characters);
-        _adder = new(_counterTerroristBotPrefab, _terroristBotPrefab, ShooterType.Teams, PlayerTeam);
-    }
-
-    private void Start()
-    {
-        RegisterPlayer();
-        AddRangeBots();
+        _adder = new(_counterTerroristBotPrefab, _terroristBotPrefab, ShooterType.Teams);
     }
 
     private void OnEnable()
@@ -78,12 +73,32 @@ public class CharacterManager : MonoBehaviour
         _saver.SavesChanged -= OnSavesChanged;
     }
 
+    public void RegisterPlayer(TeamType TeamType)
+    {
+        _player.SetName(_saver.PlayerName);
+        _player.SetTeam(TeamType);
+
+        _registrator.Register(_player);
+
+        if (TeamType != TeamType.Observer)
+            _positionAssigner.SetPosition(_player);
+
+        CharacterAdded?.Invoke(_player);
+    }
+
+    public void StartGame()
+    {
+        _soundPlayer.PlayStartRound();
+        AddRangeBots();
+    }
+
     public int GetWinCount(TeamType team)
     {
         return team switch
         {
             TeamType.CounterTerrorist => _ctCountWin,
             TeamType.Terrorist => _terCountWin,
+            TeamType.AgainstEveryone => _aeCountWin,
             _ => 0,
         };
     }
@@ -105,8 +120,11 @@ public class CharacterManager : MonoBehaviour
     private void OnBotKillPressed() =>
         _adder.KillBots();
 
-    private void OnRoundRestarted() =>
+    private void OnRoundRestarted()
+    {
+        _soundPlayer.PlayStartRound();
         RoundRestarted?.Invoke();
+    }
 
     private void OnSavesChanged()
     {
@@ -128,25 +146,17 @@ public class CharacterManager : MonoBehaviour
         Died?.Invoke(character);
     }
 
-    private void RegisterPlayer()
-    {
-        _player.SetName(_saver.PlayerName);
-        _player.SetTeam(PlayerTeam);
-        _registrator.Register(_player);
-        _positionAssigner.SetPosition(_player);
-
-        CharacterAdded?.Invoke(_player);
-    }
-
     private void AddRangeBots()
     {
+        _adder.SetNextTeamBot(_player.Team != TeamType.CounterTerrorist);
+
         for (int i = 0; i < _saver.CountBot; i++)
             AddBot();
     }
 
     private void AddBot()
     {
-        if (_registrator.Count >= _positionAssigner.PointsCount)
+        if (_registrator.AllCount >= _positionAssigner.PointsCount)
             return;
 
         Character bot = _adder.Add();
@@ -162,13 +172,13 @@ public class CharacterManager : MonoBehaviour
 
         if (killer != null)
         {
-            if (killer.Team == character.Team && killer.Team != TeamType.None)
+            if (killer.Team == character.Team && killer.Team != TeamType.AgainstEveryone)
                 killer.DecreaseCountKill();
             else
                 killer.IncreaseCountKill();
 
             Killed?.Invoke(killer);
-        }     
+        }
     }
 
     private bool IsNeedRestartRound()
@@ -179,7 +189,7 @@ public class CharacterManager : MonoBehaviour
         if (_registrator.IsEveryoneDead())
             return true;
 
-        if (_registrator.IsTeamDeath(TeamType.CounterTerrorist))
+        if (_registrator.IsTeamDead(TeamType.CounterTerrorist))
         {
             _terCountWin++;
             _soundPlayer.PlayTerroristWin();
@@ -188,11 +198,20 @@ public class CharacterManager : MonoBehaviour
             return true;
         }
 
-        if (_registrator.IsTeamDeath(TeamType.Terrorist))
+        if (_registrator.IsTeamDead(TeamType.Terrorist))
         {
             _ctCountWin++;
             _soundPlayer.PlayCounterTerroristWin();
             TeamWinChanged?.Invoke(TeamType.CounterTerrorist, _ctCountWin);
+
+            return true;
+        }
+
+        if (_registrator.IsOnlyOneLeftInNoTeam(out Character character))
+        {
+            _aeCountWin++;
+            _soundPlayer.PlayNoTeamCharacterWin();
+            NoneTeamCharacterWinChanged?.Invoke(character);
 
             return true;
         }

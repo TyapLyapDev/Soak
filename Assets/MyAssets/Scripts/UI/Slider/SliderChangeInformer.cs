@@ -6,10 +6,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public abstract class SliderChangeInformer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    private Slider _slider;
-    private SliderTextValue _textValue;
+    [SerializeField] private Slider _slider;
+    [SerializeField] private SliderTextValue _textValue;
 
-    public event Action<float> ValueChanged;
+    public event Action ValueChanged;
     public event Action<Type> DownPressed;
     public event Action<Type> UpPressed;
 
@@ -19,12 +19,8 @@ public abstract class SliderChangeInformer : MonoBehaviour, IPointerDownHandler,
 
     public float MaximumValue => _slider.maxValue;
 
-    public void Init()
-    {
-        _slider = GetComponent<Slider>();
-        _textValue = GetComponentInChildren<SliderTextValue>(true);
-        _textValue.Init(MaximumValue);
-    }
+    private void Awake() =>
+        _textValue.Init(_slider.maxValue);
 
     private void Start() =>
         SetText(Value);
@@ -44,7 +40,7 @@ public abstract class SliderChangeInformer : MonoBehaviour, IPointerDownHandler,
     private void OnValueChanged(float value)
     {
         SetText(value);
-        ValueChanged?.Invoke(value);
+        ValueChanged?.Invoke();
     }
 
     private void SetText(float value) =>

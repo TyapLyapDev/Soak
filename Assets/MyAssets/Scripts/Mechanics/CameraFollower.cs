@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class CameraFollower : MonoBehaviour
 {
@@ -17,6 +16,13 @@ public class CameraFollower : MonoBehaviour
     {
         RotateRig();
         MaintainHeight();
+    }
+
+    public void ReparentInPhysisModel()
+    {
+        transform.parent = _target;
+        transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        enabled = false;
     }
 
     private void RotateRig() =>

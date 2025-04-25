@@ -21,8 +21,8 @@ public class VolumeModifier : MonoBehaviour
         _minimumValueSlider = _sliderVolumeMusic.MinimumValue;
         _maximumValueSlider = _sliderVolumeMusic.MaximumValue;
 
-        OnChangedMusicVolume(_sliderVolumeMusic.Value);
-        OnChangedGameVolume(_sliderVolumeGame.Value);
+        OnChangedMusicVolume();
+        OnChangedGameVolume();
     }
 
     private void OnEnable()
@@ -37,11 +37,11 @@ public class VolumeModifier : MonoBehaviour
         _sliderVolumeGame.ValueChanged -= OnChangedGameVolume;
     }
 
-    private void OnChangedMusicVolume(float value) =>
-        SetLevel(Music, value);
+    private void OnChangedMusicVolume() =>
+        SetLevel(Music, _sliderVolumeMusic.Value);
 
-    private void OnChangedGameVolume(float value) =>
-        SetLevel(Game, value);
+    private void OnChangedGameVolume() =>
+        SetLevel(Game, _sliderVolumeGame.Value);
 
     public void SetLevel(string group, float value)
     {

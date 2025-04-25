@@ -14,12 +14,14 @@ public class SpongeShower : MonoBehaviour
     {
         _player.HealthChanged += OnHealthChanged;
         _player.Died += OnDied;
+        _player.DeadShowed += HideDrips;
     }
 
     private void OnDisable()
     {
         _player.HealthChanged -= OnHealthChanged;
         _player.Died -= OnDied;
+        _player.DeadShowed -= HideDrips;
     }
 
     private void OnHealthChanged(Character character)
@@ -36,6 +38,13 @@ public class SpongeShower : MonoBehaviour
     {
         Color color = _image.color;
         color.a = TransparentMaxValue;
+        _image.color = color;
+    }
+
+    private void HideDrips()
+    {
+        Color color = _image.color;
+        color.a = 0;
         _image.color = color;
     }
 }

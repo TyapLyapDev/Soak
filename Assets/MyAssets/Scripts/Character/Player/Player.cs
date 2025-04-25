@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 public class Player : Character
 {
+    [SerializeField] private AimMarker _aim;
     [SerializeField] private InputInformer _informer;
     [SerializeField] private LayerMask _aimLayerMask;
     
@@ -9,6 +11,8 @@ public class Player : Character
     private PlayerModelConfigurations _modelConfigurations;
     private CharacterDetector _characterDetector;
     private Shooter _shooter;
+
+    public event Action DeadShowed;
 
     public CharacterDetector CharacterDetector => _characterDetector;
 
@@ -20,7 +24,7 @@ public class Player : Character
         WaterJet waterJet = camera.GetComponentInChildren<WaterJet>(true);
 
         _rotator = new(transform, camera);
-        _modelConfigurations = new(transform);
+        _modelConfigurations = new(this);
         _shooter = new(camera, waterJet, _aimLayerMask, Colliders);
         _characterDetector = new(Camera.main.transform, Colliders, _aimLayerMask);
         _characterDetector.Start();
@@ -38,6 +42,7 @@ public class Player : Character
         _informer.RunningStepPressed += SetNormalStep;
         _informer.ShootingPressed += OnShootingPressed;
         _informer.ShootingUnpressed += OnShootingUnpressed;
+        _modelConfigurations.DeadShowed += DeadShowed;
     }
 
     protected override void OnDisable()
@@ -52,24 +57,48 @@ public class Player : Character
         _informer.RunningStepPressed -= SetNormalStep;
         _informer.ShootingPressed -= OnShootingPressed;
         _informer.ShootingUnpressed -= OnShootingUnpressed;
+        _modelConfigurations.DeadShowed -= DeadShowed;
+    }
+
+    public void LeaveOnlySoul()
+    {
+        _modelConfigurations.LeaveOnlySoul();
+        _aim.gameObject.SetActive(false);
+    }
+
+    public void DisableControl()
+    {
+        _modelConfigurations.DisableControl();
+        _aim.gameObject.SetActive(false);
+    }
+
+    public void EnableControl()
+    {
+        _modelConfigurations.ProcessResurrect();
+        _aim.gameObject.SetActive(IsDead == false);
     }
 
     public override void Resurrect()
     {
         base.Resurrect();
         _modelConfigurations.ProcessResurrect();
+        _aim.gameObject.SetActive(true);
     }
 
     protected override void OnDied()
     {
-        base.OnDied();
         _shooter.StopRay();
-        _modelConfigurations.ProcessDied();
+        StopPlayWaterJet();
+
+        base.OnDied();
+
+        _modelConfigurations.ProcessDied(Killer);
+        _aim.gameObject.SetActive(false);
     }
 
     private void OnMovePressed(Vector2 inputs)
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         Move(inputs);
@@ -77,7 +106,7 @@ public class Player : Character
 
     private void OnRotatePressed(Vector2 direction)
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         _rotator.Rotate(direction);
@@ -85,7 +114,7 @@ public class Player : Character
 
     private void OnJumpPressed()
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         Jump();
@@ -93,7 +122,7 @@ public class Player : Character
 
     private void OnSneackPressed()
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         Sneack();
@@ -101,7 +130,7 @@ public class Player : Character
 
     private void OnRisePressed()
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         Rise();
@@ -109,17 +138,19 @@ public class Player : Character
 
     private void OnShootingPressed()
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         _shooter.StartRay();
+        StartPlayWaterJet();
     }
 
     private void OnShootingUnpressed()
     {
-        if (IsDeath)
+        if (IsDead || Team == TeamType.Observer)
             return;
 
         _shooter.StopRay();
+        StopPlayWaterJet();
     }
 }

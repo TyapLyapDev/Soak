@@ -42,7 +42,7 @@ public class CharacterDetector
             if (Utils.IsSelfColliders(_selfColliders, _raycastBuffer[i].collider))
                 continue;
 
-            if (_raycastBuffer[i].collider.TryGetComponent(out Body body) && body.Character.IsDeath == false)
+            if (_raycastBuffer[i].collider.TryGetComponent(out Body body) && body.Character.IsDead == false)
                 Detected?.Invoke(body.Character);
             else
                 Undetected?.Invoke();

@@ -9,13 +9,8 @@ public class SliderClickSound : MonoBehaviour
 
     private SliderChangeInformer[] _sliders;
 
-    private void Awake()
-    {
+    private void Awake() =>
         _sliders = GetComponentsInChildren<SliderChangeInformer>(true);
-
-        foreach (SliderChangeInformer slider in _sliders)
-            slider.Init();
-    }
 
     private void OnEnable() =>
         Subscribe();

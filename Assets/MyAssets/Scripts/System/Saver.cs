@@ -45,6 +45,7 @@ public class Saver : MonoBehaviour
 
         PlayerPrefs.Save();
 
+        DataParams.SaveOptions.IsGravigravitationalAnomaliesChecked = _gravigravitationalAnomalies.isOn;
         SavesChanged?.Invoke();
     }
 
@@ -63,5 +64,7 @@ public class Saver : MonoBehaviour
         _sliderAimColorRed.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.AimColorR, DataParams.SaveOptions.ValueAimColorR));
         _sliderAimColorGreen.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.AimColorG, DataParams.SaveOptions.ValueAimColorG));
         _sliderAimColorBlue.SetValue(PlayerPrefs.GetFloat(DataParams.SaveOptions.AimColorB, DataParams.SaveOptions.ValueAimColorB));
+
+        DataParams.SaveOptions.IsGravigravitationalAnomaliesChecked = _gravigravitationalAnomalies.isOn;
     }
 }

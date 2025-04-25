@@ -58,6 +58,8 @@ public static class DataParams
         public const float ValueAimColorG = 1f;
         public const float ValueAimColorB = 0f;
         public const float ValueAimScale = 1f;
+
+        public static bool IsGravigravitationalAnomaliesChecked = false;
     }
 
     public static class Texts
@@ -69,8 +71,11 @@ public static class DataParams
         public const string TeamNoName = "Без команды";
         public const string TeamTerroristsName = "Хулиганы";
         public const string TeamCounterTerroristsName = "Защитники";
+        public const string TeamObserverName = "Наблюдатели";
+        public const string TeamAgainstEveryoneName = "Против всех";
         public const string TextTerroristsWin = "Хулиганы победили!";
         public const string TextCounterTerroristsWin = "Защитники победили!";
+        public const string TextCharacterWin = "{0} побеждает всех!";
 
         public const string HintFriendTeam = "Кореш : ";
         public const string HintEnemyTeam = "Вражина : ";

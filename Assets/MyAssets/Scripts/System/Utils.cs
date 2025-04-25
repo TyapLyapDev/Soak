@@ -38,4 +38,16 @@ public static class Utils
 
         return selfColliders.Contains(collider);
     }
+
+    public static string GetTeamName(TeamType teamType)
+    {
+        return teamType switch
+        {
+            TeamType.Terrorist => DataParams.Texts.TeamTerroristsName,
+            TeamType.CounterTerrorist => DataParams.Texts.TeamCounterTerroristsName,
+            TeamType.AgainstEveryone => DataParams.Texts.TeamAgainstEveryoneName,
+            TeamType.Observer => DataParams.Texts.TeamObserverName,
+            _ => string.Empty
+        };
+    }
 }

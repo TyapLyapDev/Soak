@@ -30,7 +30,10 @@ public class WaterJet : MonoBehaviour
 
         for (int i = 0; i < countEvents; i++)
             if (other.TryGetComponent(out Body body))
-                body.TakeDamage(_character, DamageValue);
+            {
+                Vector3 forceDirection = (other.transform.position - transform.position).normalized;
+                body.TakeDamage(_character, forceDirection, DamageValue);
+            }
 
         ProcessCollision(_collisionEvents[0]);
     }

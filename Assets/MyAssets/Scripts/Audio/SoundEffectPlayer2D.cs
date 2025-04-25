@@ -10,6 +10,8 @@ public class SoundEffectPlayer2D : MonoBehaviour
     [SerializeField] private AudioClip _sliderUpPressed;
     [SerializeField] private AudioClip _counterTerroristWin;
     [SerializeField] private AudioClip _terroristWin;
+    [SerializeField] private AudioClip _noTeamCharacterWin;
+    [SerializeField] private AudioClip _voiceStartRound;
 
     private AudioSource _audioSource;
 
@@ -36,4 +38,10 @@ public class SoundEffectPlayer2D : MonoBehaviour
 
     public void PlayTerroristWin() =>
         _audioSource.PlayOneShot(_terroristWin);
+
+    public void PlayNoTeamCharacterWin() =>
+        _audioSource.PlayOneShot(_noTeamCharacterWin);
+
+    public void PlayStartRound() =>
+        _audioSource.PlayOneShot(_voiceStartRound);
 }

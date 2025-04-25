@@ -13,6 +13,11 @@ public class CharacterStatsView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _countDeath;
     [SerializeField] private GameObject _background;
 
+    private Character _character;
+
+    public void Init(Character character) =>
+        _character = character;
+
     public void UpdateName(string name) =>
         _name.text = name;
 
@@ -30,15 +35,35 @@ public class CharacterStatsView : MonoBehaviour
         _countDeath.color = color;
     }
 
-    public void UpdateCountDeath(int countDeath) =>
-        _countDeath.text = countDeath.ToString();       
+    public void UpdateCountDeath(int countDeath)
+    {
+        if (_character.Team == TeamType.Observer)
+            _countDeath.text = string.Empty;
+        else
+            _countDeath.text = countDeath.ToString();
+    }
 
-    public void SetDeathStatus(bool isDeath) =>
-        _life.text = isDeath ? Death : Alive;
+    public void SetDeathStatus(bool isDeath)
+    {
+        if (_character.Team == TeamType.Observer)
+            _life.text = string.Empty;
+        else
+            _life.text = isDeath ? Death : Alive;
+    }
 
-    public void UpdateHealth(float value) =>
-        _health.text = value > 0 ? value.ToString("F0") : string.Empty;
+    public void UpdateHealth(float value)
+    {
+        if (_character.Team == TeamType.Observer)
+            _health.text = string.Empty;
+        else
+            _health.text = value > 0 ? value.ToString("F0") : string.Empty;
+    }
 
-    public void UpdateCountKill(int countKill) =>
-        _countKill.text = countKill.ToString();
+    public void UpdateCountKill(int countKill)
+    {
+        if (_character.Team == TeamType.Observer)
+            _countKill.text = string.Empty;
+        else
+            _countKill.text = countKill.ToString();
+    }
 }

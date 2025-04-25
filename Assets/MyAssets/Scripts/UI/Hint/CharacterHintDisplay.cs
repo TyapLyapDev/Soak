@@ -63,7 +63,7 @@ public class CharacterHintDisplay : MonoBehaviour
         if (_lastCharacter == null)
             throw new ArgumentNullException($"Исключение нулевой ссылки _lastCharacter");
 
-        return _lastCharacter.Team == _player.Team && _lastCharacter.Team != TeamType.None ? 
+        return _lastCharacter.Team == _player.Team && _lastCharacter.Team != TeamType.AgainstEveryone ? 
             DataParams.Texts.HintFriendTeam :
             DataParams.Texts.HintEnemyTeam;
     }

@@ -76,7 +76,7 @@ public class BotEnemyAttacker
 
     private void CheckVisibilityCurrentEnemy()
     {
-        if (_enemyChecker.TrySeeEnemy(_enemyTarget) || _enemyTarget.IsDeath == false)
+        if (_enemyChecker.TrySeeEnemy(_enemyTarget) || _enemyTarget.IsDead == false)
             return;
 
         _enemyTarget = null;
@@ -99,7 +99,10 @@ public class BotEnemyAttacker
 
     private void OnDetected(Character other)
     {
-        bool isFriend = other.Team == _selfCharacter.Team && other.Team != TeamType.None;
+        if (other.IsDead)
+            return;
+
+        bool isFriend = other.Team == _selfCharacter.Team && other.Team != TeamType.AgainstEveryone;
 
         if (isFriend == false && _enemyTarget != other)
             OnNewEnemyTarget(other);

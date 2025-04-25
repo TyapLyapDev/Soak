@@ -11,16 +11,18 @@ public class CharacterAdder
     private readonly ShooterType _shooterType;
     private bool _isCounterTerrorist;
 
-    public CharacterAdder(Character counterTerroristrefab, Character terroristrefab, ShooterType shooterType, TeamType player)
+    public CharacterAdder(Character counterTerroristrefab, Character terroristrefab, ShooterType shooterType)
     {
         _counterTerroristBotPrefab = counterTerroristrefab;
         _terroristBotPrefab = terroristrefab;
         _names = DataParams.Texts.Names.ToList();
         _shooterType = shooterType;
-        _isCounterTerrorist = player == TeamType.CounterTerrorist;
     }
 
     public int Count => _bots.Count;
+
+    public void SetNextTeamBot(bool isCounterTerrorist) =>
+        _isCounterTerrorist = isCounterTerrorist;
 
     public List<Character> Add(int count)
     {
@@ -70,7 +72,7 @@ public class CharacterAdder
     public void KillBots()
     {
         foreach (Character bot in _bots)
-            if (bot.IsDeath == false)
+            if (bot.IsDead == false)
                 bot.Kill();
     }
 
@@ -85,9 +87,9 @@ public class CharacterAdder
     private TeamType GetTeamType()
     {
         if (_shooterType == ShooterType.Loner)
-            return TeamType.None;
+            return TeamType.AgainstEveryone;
 
         _isCounterTerrorist = !_isCounterTerrorist;
-        return _isCounterTerrorist ? TeamType.CounterTerrorist : TeamType.Terrorist;
+        return _isCounterTerrorist ? TeamType.Terrorist : TeamType.CounterTerrorist;
     }
 }

@@ -33,7 +33,7 @@ public class SmartBot : Character
 
     private void Update()
     {
-        if (IsDeath)
+        if (IsDead)
             return;
 
         OnMove();
@@ -59,12 +59,12 @@ public class SmartBot : Character
         _freeMovement.JumpOpened -= OnJumpOpened;
     }
 
-    public override void SetListCharacters(List<Character> characters)
+    public override void Init(List<Character> characters)
     {
-        base.SetListCharacters(characters);
+        base.Init(characters);
         _botEnemyAttacker = new(this, _aimLayerMask, characters);
 
-        if (IsDeath == false)
+        if (IsDead == false)
             _botEnemyAttacker.Start();
 
         _botEnemyAttacker.EnemySerched += OnEnemySearched;
@@ -75,7 +75,7 @@ public class SmartBot : Character
 
     private void OnMove()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         Vector2 input = _botMover.IsMoving ? _freeMovement.Input : Vector2.zero;
@@ -84,7 +84,7 @@ public class SmartBot : Character
 
     private void OnSneacked()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         Sneack();
@@ -93,7 +93,7 @@ public class SmartBot : Character
 
     private void OnRised()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         Rise();
@@ -102,7 +102,7 @@ public class SmartBot : Character
 
     private void OnSlowed()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         Rise();
@@ -111,7 +111,7 @@ public class SmartBot : Character
 
     private void OnTargetSwitched()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         _botRotator.UpdateTarget(_targetSwitcher.Target);
@@ -119,7 +119,7 @@ public class SmartBot : Character
 
     private void OnJumpOpened()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         Jump();
@@ -127,7 +127,7 @@ public class SmartBot : Character
 
     private void OnEnemySearched(Character character)
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         _botRotator.RotateToEnemyTarget();
@@ -137,7 +137,7 @@ public class SmartBot : Character
 
     private void OnEnemyLost()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         _targetSwitcher.SetTarget(null);
@@ -146,14 +146,18 @@ public class SmartBot : Character
 
     protected void StartShooting()
     {
-        if (IsDeath)
+        if (IsDead)
             throw new Exception("Ћогика продолжает работать после гибели бота");
 
         _shooter.StartRay();
+        StartPlayWaterJet();
     }
 
-    protected void StopShooting() =>
+    protected void StopShooting()
+    {
         _shooter.StopRay();
+        StopPlayWaterJet();
+    }
 
     protected override void OnDied()
     {
@@ -163,8 +167,7 @@ public class SmartBot : Character
         _botRotator.Stop();
         _botMover.Stop();
 
-        if (_botEnemyAttacker != null)
-            _botEnemyAttacker.Stop();
+        _botEnemyAttacker?.Stop();
 
         base.OnDied();
     }

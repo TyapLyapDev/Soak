@@ -3,27 +3,17 @@ using UnityEngine;
 
 public class SliderTextValue : MonoBehaviour
 {
-    private TextMeshProUGUI _text;
+    [SerializeField] private TextMeshProUGUI _text;
     private string _format = string.Empty;
 
     public void Init(float maxValue)
     {
-        _text = GetComponent<TextMeshProUGUI>();
-
-        switch (maxValue)
+        _format = maxValue switch
         {
-            case > 30:
-                _format = "F0";
-                break;
-
-            case > 5:
-                _format = "F1";
-                break;
-
-            default:
-                _format = "F2";
-                break;
-        }
+            > 30 => "F0",
+            > 5 => "F1",
+            _ => "F2",
+        };
     }
 
     public void SetValue(float value) =>

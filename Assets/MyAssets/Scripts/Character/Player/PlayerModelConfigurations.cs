@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerModelConfigurations
 {
+    private const float DelayAfterDeadInSeconds = 3f;
+
     private readonly CameraFollower _cameraFollower;
     private readonly RequestCameraTarget _requestCameraTarget;
     private readonly SoulModel _cameraDisplayBody;
@@ -10,11 +14,21 @@ public class PlayerModelConfigurations
     private readonly CharacterGeo _physicalMesh;
     private readonly Weapon _weaponInPhysicalBody;
     private readonly PlayerSoul _soul = new();
+    private readonly Player _player;
+
+    private readonly MonoBehaviour _monoBehaviour;
+    private readonly WaitForSeconds _waitAfterDead;
 
     private readonly Transform _camera;
 
-    public PlayerModelConfigurations(Transform player)
+    public event Action DeadShowed;
+
+    public PlayerModelConfigurations(Player player)
     {
+        _waitAfterDead = new(DelayAfterDeadInSeconds);
+        _monoBehaviour = player.GetComponent<MonoBehaviour>();
+        _player = player;
+
         _camera = Camera.main.transform;
 
         _physicalBody = player.GetComponentInChildren<PhysicalModel>(true);
@@ -44,21 +58,22 @@ public class PlayerModelConfigurations
 
         if (_physicalMesh == null)
             throw new NullReferenceException($"Не найден компонент CharacterGeo в иерархии {_physicalBody.transform.name}");
-
-        ProcessResurrect();
     }
 
-    public void ProcessDied()
+    public void ProcessDied(Character killer)
     {
-        _cameraFollower.enabled = false;
+        _cameraFollower.ReparentInPhysisModel();
         _cameraDisplayBody.gameObject.SetActive(false);
         _physicalMesh.gameObject.SetActive(true);
         _weaponInPhysicalBody.gameObject.SetActive(true);
-        _soul.EnableMovementContol();
+
+        _monoBehaviour.StartCoroutine(EnableMovementSoulAfterTime(killer));
     }
 
     public void ProcessResurrect()
     {
+        _camera.parent = _player.transform;
+
         _camera.SetPositionAndRotation(
             _requestCameraTarget.transform.position,
             _requestCameraTarget.transform.rotation);
@@ -68,5 +83,64 @@ public class PlayerModelConfigurations
         _physicalMesh.gameObject.SetActive(false);
         _weaponInPhysicalBody.gameObject.SetActive(false);
         _soul.DisableMovementContol();
+    }
+
+    public void DisableControl()
+    {
+        _cameraFollower.enabled = false;
+        _cameraDisplayBody.gameObject.SetActive(false);
+        _physicalMesh.gameObject.SetActive(false);
+        _weaponInPhysicalBody.gameObject.SetActive(false);
+        _soul.DisableMovementContol();
+    }
+
+    public void LeaveOnlySoul()
+    {
+        _physicalBody.gameObject.SetActive(false);
+        _cameraDisplayBody.gameObject.SetActive(false);
+        _physicalMesh.gameObject.SetActive(false);
+        _weaponInPhysicalBody.gameObject.SetActive(false);
+        _soul.EnableMovementContol();
+    }
+
+    private IEnumerator EnableMovementSoulAfterTime(Character killer)
+    {
+        yield return _waitAfterDead;
+
+        if (_player.IsDead == false)
+            yield break;
+
+        _soul.EnableMovementContol();
+        _camera.parent = null;
+
+        if (killer != null)
+        {
+            float backwardOffset = 1f;
+            float verticalOffset = 0.5f;
+
+            Vector3 backDirection = -killer.transform.forward;
+
+            Vector3 cameraPosition = killer.Center.position
+                + backDirection * backwardOffset
+                + killer.transform.up * verticalOffset;
+
+            Vector3 lookDirection = killer.Center.position - cameraPosition;
+
+            _camera.SetPositionAndRotation(cameraPosition, Quaternion.LookRotation(lookDirection.normalized));
+        }
+        else
+        {
+            Vector3 currentRotation = _camera.rotation.eulerAngles;
+            currentRotation.x = 0f;
+            currentRotation.z = 0f;
+            _camera.rotation = Quaternion.Euler(currentRotation);
+
+            Vector3 currentPosition = _camera.position;
+            currentPosition.y += 1f;
+
+            _camera.SetLocalPositionAndRotation(currentPosition, Quaternion.Euler(currentRotation));
+        }
+
+        DeadShowed?.Invoke();
     }
 }

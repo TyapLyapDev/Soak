@@ -5,24 +5,29 @@ public class CursorShower : MonoBehaviour
     [SerializeField] private MenuShower _menuShower;
     [SerializeField] private PanelTeamSelectionPlayer _panelTeamSelectionPlayer;
 
-    private void OnEnable() =>
+    private void OnEnable()
+    {
         _menuShower.ShowingStateChanged += OnShowingStateChanged;
+        _panelTeamSelectionPlayer.ShowingStateChanged += OnShowingStateChanged;
+    }
 
-    private void OnDisable() =>
+    private void OnDisable()
+    {
         _menuShower.ShowingStateChanged -= OnShowingStateChanged;
+        _panelTeamSelectionPlayer.ShowingStateChanged -= OnShowingStateChanged;
+    }
 
     private void OnApplicationFocus(bool focus)
     {
-        Cursor.visible = focus && _menuShower.IsShowing == false ? false : true;
-        if (focus && _menuShower.IsShowing == false)
+        if (focus && (_menuShower.IsShowing == false && _panelTeamSelectionPlayer.gameObject.activeInHierarchy == false))
             HideCursor();
         else
             ShowCursor();
     }
 
-    private void OnShowingStateChanged(bool isShowing)
+    private void OnShowingStateChanged()
     {
-        if (isShowing || _panelTeamSelectionPlayer.gameObject.activeInHierarchy)
+        if (_menuShower.IsShowing || _panelTeamSelectionPlayer.gameObject.activeInHierarchy)
             ShowCursor();
         else
             HideCursor();

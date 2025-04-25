@@ -11,7 +11,7 @@ public class MenuShower : MonoBehaviour
 
     public bool IsShowing => _isShowing;
 
-    public event Action<bool> ShowingStateChanged;
+    public event Action ShowingStateChanged;
 
     private void Start() =>
         OnShowingChanged(_isShowing);
@@ -43,6 +43,6 @@ public class MenuShower : MonoBehaviour
     private void OnShowingChanged(bool isShowing)
     {
         _windowSwitcher.gameObject.SetActive(isShowing);
-        ShowingStateChanged?.Invoke(isShowing);
+        ShowingStateChanged?.Invoke();
     }
 }

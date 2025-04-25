@@ -12,9 +12,9 @@ public class TeamStatsView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _winCountText;
     [SerializeField] private Image _border;
 
-    public void UpdateTeamName(TeamType teamType, int countCharacters)
+    public void UpdateTeamHeader(TeamType teamType, int countCharacters)
     {
-        string team = GetTeamName(teamType);
+        string team = Utils.GetTeamName(teamType);
         string count = countCharacters.ToString();
         string form = GetPlayerForm(countCharacters);
 
@@ -22,7 +22,7 @@ public class TeamStatsView : MonoBehaviour
     }
 
     public void UpdateWinCount(int countWins) =>
-        _winCountText.text = countWins.ToString();
+        _winCountText.text = countWins < 0 ? string.Empty : countWins.ToString();
 
     public void UpdateColor(TeamType teamType)
     {
@@ -43,15 +43,5 @@ public class TeamStatsView : MonoBehaviour
 
         else
             return MorePlayers;
-    }
-
-    private string GetTeamName(TeamType teamType)
-    {
-        return teamType switch
-        {
-            TeamType.Terrorist => DataParams.Texts.TeamTerroristsName,
-            TeamType.CounterTerrorist => DataParams.Texts.TeamCounterTerroristsName,
-            _ => DataParams.Texts.TeamNoName
-        };
     }
 }
