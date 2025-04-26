@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PanelTeamSelectionPlayer : MonoBehaviour
 {
+    [SerializeField] private SpatialAnomaliesSource _spatialAnomaliesSource;
     [SerializeField] private PanelTeamSelectionInformer _panelSelectionInformer;
     [SerializeField] private InputInformer _playerInputInformer;
     [SerializeField] private Player _player;
@@ -62,11 +63,14 @@ public class PanelTeamSelectionPlayer : MonoBehaviour
 
         _characterManager.RegisterPlayer(teamType);
         _characterManager.StartGame();
-        ShowingStateChanged?.Invoke();
+        ShowingStateChanged?.Invoke();        
 
         if (teamType == TeamType.Observer)
             _player.LeaveOnlySoul();
         else
             _player.EnableControl();
+
+        if (DataParams.SaveOptions.IsSpatialAnomaliesChecked)
+            _spatialAnomaliesSource.StartAnimation();
     }
 }

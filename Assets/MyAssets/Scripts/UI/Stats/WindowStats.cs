@@ -138,7 +138,7 @@ public class WindowStats : MonoBehaviour
         if (_teamStats.TryGetValue(character.Team, out TeamStats teamStats) == false)
             throw new KeyNotFoundException($"Команда {character.Team} не найдена в списке");
 
-        teamStats.UpdateSorting();
+        teamStats.SortCharacters();
     }
 
     private void SortTeamViews()

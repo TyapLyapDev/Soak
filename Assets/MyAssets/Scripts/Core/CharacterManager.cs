@@ -2,12 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ShooterType
-{
-    Teams,
-    Loner,
-}
-
 public enum TeamType
 {
     AgainstEveryone,
@@ -18,6 +12,7 @@ public enum TeamType
 
 public class CharacterManager : MonoBehaviour
 {
+    [SerializeField] private MapRotator _map;
     [SerializeField] private Saver _saver;
     [SerializeField] private InputInformer _informer;
     [SerializeField] private SoundEffectPlayer2D _soundPlayer;
@@ -30,6 +25,7 @@ public class CharacterManager : MonoBehaviour
     private CharacterAdder _adder;
     private RoundRestarter _roundRestarter;
     private CharacterRegistrator _registrator;
+    private readonly Dictionary<Character, Vector3> _originalScales = new();
 
     private int _ctCountWin;
     private int _terCountWin;
@@ -52,7 +48,31 @@ public class CharacterManager : MonoBehaviour
         _registrator = new(OnDied);
         _positionAssigner = new(_folder.transform);
         _roundRestarter = new(this, _positionAssigner, _registrator.Characters);
-        _adder = new(_counterTerroristBotPrefab, _terroristBotPrefab, ShooterType.Teams);
+        _adder = new(_counterTerroristBotPrefab, _terroristBotPrefab, _map.transform);
+    }
+
+    private void LateUpdate()
+    {
+        if (DataParams.SaveOptions.IsGravitationalAnomaliesChecked)
+            HandleGravitationalAnomalies();
+    }
+
+    private void HandleGravitationalAnomalies()
+    {
+        foreach (Character character in Characters)
+        {
+            if (character.IsDead == false)
+            {
+                Vector3 euler = character.transform.eulerAngles;
+                character.transform.rotation = Quaternion.Euler(0, euler.y, 0);
+
+                if (character is Player)
+                {
+                    euler = Camera.main.transform.eulerAngles;
+                    Camera.main.transform.rotation = Quaternion.Euler(euler.x, euler.y, 0);
+                }
+            }
+        }
     }
 
     private void OnEnable()
@@ -78,7 +98,7 @@ public class CharacterManager : MonoBehaviour
         _player.SetName(_saver.PlayerName);
         _player.SetTeam(TeamType);
 
-        _registrator.Register(_player);
+            _registrator.Register(_player);        
 
         if (TeamType != TeamType.Observer)
             _positionAssigner.SetPosition(_player);
@@ -160,6 +180,7 @@ public class CharacterManager : MonoBehaviour
             return;
 
         Character bot = _adder.Add();
+
         _registrator.Register(bot);
         _positionAssigner.SetPosition(bot);
 

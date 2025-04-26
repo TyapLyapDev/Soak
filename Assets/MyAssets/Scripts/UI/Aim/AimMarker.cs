@@ -28,9 +28,9 @@ public class AimMarker : MonoBehaviour
         _blueSlider.ValueChanged -= OnColorChanged;
     }
 
-    private void OnScaleChanged() =>
+    private void OnColorChanged() =>
         _image.color = new(_redSlider.Value, _greenSlider.Value, _blueSlider.Value, 1);
 
-    private void OnColorChanged() =>
+    private void OnScaleChanged() =>
         transform.localScale = Vector3.one * _sliderScalingAim.Value;
 }

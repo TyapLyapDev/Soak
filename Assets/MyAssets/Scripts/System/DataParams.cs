@@ -35,10 +35,15 @@ public static class DataParams
 
     public static class SaveOptions
     {
-        public const string PlayerName = nameof(PlayerName);
-        public const string CountBot = nameof(CountBot);
+        public const string CharactertWeightlessness = nameof(CharactertWeightlessness);
         public const string GravigravitationalAnomalies = nameof(GravigravitationalAnomalies);
         public const string SpatialAnomalies = nameof(SpatialAnomalies);
+
+        public const string TeamType = nameof(TeamType);
+
+        public const string PlayerName = nameof(PlayerName);
+        public const string CountBot = nameof(CountBot);
+
         public const string HorizontalRotation = nameof(HorizontalRotation);
         public const string VerticalRotation = nameof(VerticalRotation);
         public const string VolumeGame = nameof(VolumeGame);
@@ -59,7 +64,10 @@ public static class DataParams
         public const float ValueAimColorB = 0f;
         public const float ValueAimScale = 1f;
 
-        public static bool IsGravigravitationalAnomaliesChecked = false;
+        public static bool IsCharacterWeightlessnessChecked = false;
+        public static bool IsGravitationalAnomaliesChecked = false;
+        public static bool IsSpatialAnomaliesChecked = false;
+        public static int TeamTypeIndex = 0;
     }
 
     public static class Texts
@@ -67,7 +75,9 @@ public static class DataParams
         public const string PlayerName = ">>-Стрелок-->";
         public const string CountBot = "9";
         public const int GravigravitationalAnomalies = 0;
+        public const int CharactertWeightlessness = 0;
         public const int SpatialAnomalies = 0;
+        public const int TeamType = 0;
         public const string TeamNoName = "Без команды";
         public const string TeamTerroristsName = "Хулиганы";
         public const string TeamCounterTerroristsName = "Защитники";

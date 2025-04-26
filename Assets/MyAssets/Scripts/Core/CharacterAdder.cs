@@ -6,17 +6,17 @@ public class CharacterAdder
 {
     private readonly Character _counterTerroristBotPrefab;
     private readonly Character _terroristBotPrefab;
+    private readonly Transform _map;
     private readonly List<Character> _bots = new();
     private readonly List<string> _names;
-    private readonly ShooterType _shooterType;
     private bool _isCounterTerrorist;
 
-    public CharacterAdder(Character counterTerroristrefab, Character terroristrefab, ShooterType shooterType)
+    public CharacterAdder(Character counterTerroristrefab, Character terroristrefab, Transform map)
     {
+        _map = map;
         _counterTerroristBotPrefab = counterTerroristrefab;
         _terroristBotPrefab = terroristrefab;
         _names = DataParams.Texts.Names.ToList();
-        _shooterType = shooterType;
     }
 
     public int Count => _bots.Count;
@@ -29,7 +29,7 @@ public class CharacterAdder
         List<Character> bots = new();
 
         for (int i = 0; i < count; i++)
-                bots.Add(Add());
+            bots.Add(Add());
 
         _bots.AddRange(bots);
 
@@ -40,9 +40,9 @@ public class CharacterAdder
     {
         TeamType team = GetTeamType();
 
-        Character bot = team == TeamType.CounterTerrorist ? 
-            Object.Instantiate(_counterTerroristBotPrefab, null) : 
-            Object.Instantiate(_terroristBotPrefab, null);
+        Character bot = team == TeamType.CounterTerrorist ?
+            Object.Instantiate(_counterTerroristBotPrefab, _map) :
+            Object.Instantiate(_terroristBotPrefab, _map);
 
         _bots.Add(bot);
 
@@ -86,7 +86,7 @@ public class CharacterAdder
 
     private TeamType GetTeamType()
     {
-        if (_shooterType == ShooterType.Loner)
+        if (DataParams.SaveOptions.TeamTypeIndex == 1)
             return TeamType.AgainstEveryone;
 
         _isCounterTerrorist = !_isCounterTerrorist;

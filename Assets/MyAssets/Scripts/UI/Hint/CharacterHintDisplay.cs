@@ -26,6 +26,9 @@ public class CharacterHintDisplay : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (_characterDetector == null)
+            return;
+
         _characterDetector.Detected -= OnDetected;
         _characterDetector.Undetected -= OnUndetected;
     }

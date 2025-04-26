@@ -147,3 +147,7 @@ MonoBehaviour:
   _clickTabButton: {fileID: 8300000, guid: 70385d9382278cc4080a69050e834c8f, type: 3}
   _sliderDownPressed: {fileID: 8300000, guid: fddefafedcb5e07419e76e4f49a5a3dd, type: 3}
   _sliderUpPressed: {fileID: 8300000, guid: d83f7ec3f5c2b9d448096082532ed1dd, type: 3}
+  _counterTerroristWin: {fileID: 8300000, guid: 706f797d575efb84aa91756c38028542, type: 3}
+  _terroristWin: {fileID: 8300000, guid: f2c2c38318412d1468ebff77c6f33f53, type: 3}
+  _noTeamCharacterWin: {fileID: 8300000, guid: 17f793f89edfa0d43ad8b745d5606c59, type: 3}
+  _voiceStartRound: {fileID: 8300000, guid: 5df74d7f78e1d8d4c993c26655516164, type: 3}

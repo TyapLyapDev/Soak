@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerModelConfigurations
 {
     private const float DelayAfterDeadInSeconds = 3f;
 
+    private readonly MapRotator _map;
     private readonly CameraFollower _cameraFollower;
     private readonly RequestCameraTarget _requestCameraTarget;
     private readonly SoulModel _cameraDisplayBody;
@@ -25,6 +25,8 @@ public class PlayerModelConfigurations
 
     public PlayerModelConfigurations(Player player)
     {
+        _map = player.GetComponentInParent<MapRotator>();
+
         _waitAfterDead = new(DelayAfterDeadInSeconds);
         _monoBehaviour = player.GetComponent<MonoBehaviour>();
         _player = player;
@@ -111,7 +113,7 @@ public class PlayerModelConfigurations
             yield break;
 
         _soul.EnableMovementContol();
-        _camera.parent = null;
+        _camera.parent = _map.transform;
 
         if (killer != null)
         {

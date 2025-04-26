@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RagdollHandler
 {
-    private List<Rigidbody> _bodies;
+    private readonly List<Rigidbody> _bodies;
 
     public RagdollHandler(Transform transform)
     {
@@ -15,7 +15,7 @@ public class RagdollHandler
     {
         foreach (Rigidbody rigidbody in _bodies)
         {
-            rigidbody.useGravity = !DataParams.SaveOptions.IsGravigravitationalAnomaliesChecked;
+            rigidbody.useGravity = !DataParams.SaveOptions.IsCharacterWeightlessnessChecked;
             rigidbody.isKinematic = false;
         }
     }

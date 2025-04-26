@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Body : MonoBehaviour
 {
-    private const float Force = 2f;
+    private const float Force = 3f;
 
     public event Action<Character, float> DamageTaked;
 
